@@ -4,316 +4,284 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ELECTRA — Vehicles of Future | Egypt's Premier EV Dealer</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
 <style>
 :root{
-  --g:#00e5a0;--g2:#00b87a;--g3:rgba(0,229,160,0.12);--gb:rgba(0,229,160,0.22);
-  --bg:#070707;--bg2:#0d0d0d;--panel:rgba(7,15,11,0.92);
-  --white:#fff;--gray:rgba(255,255,255,0.55);--gray2:rgba(255,255,255,0.2);
-  --fh:'Orbitron',sans-serif;--fb:'Inter',sans-serif;
+  --g:#00e5a0;--g2:#00b87a;--gd:rgba(0,229,160,.12);--gb:rgba(0,229,160,.2);
+  --bg:#070707;--p:rgba(5,14,9,.92);--fh:'Orbitron',sans-serif;--fb:'Inter',sans-serif;
+  --gray:rgba(255,255,255,.55);--gray2:rgba(255,255,255,.18);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;overflow-x:hidden}
-body{background:var(--bg);color:var(--white);font-family:var(--fb);overflow-x:hidden;cursor:none}
-img{max-width:100%;display:block}
+body{background:var(--bg);color:#fff;font-family:var(--fb);overflow-x:hidden;cursor:none}
 
 /* CURSOR */
 #cur,#cur2{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;transform:translate(-50%,-50%)}
 #cur{width:9px;height:9px;background:var(--g);top:0;left:0;mix-blend-mode:difference}
 #cur2{width:32px;height:32px;border:1px solid var(--g);top:0;left:0;opacity:.5;transition:all .16s ease}
 @media(max-width:768px){#cur,#cur2{display:none}body{cursor:auto}}
+#prog{position:fixed;top:0;left:0;height:2px;background:var(--g);z-index:1001;box-shadow:0 0 10px var(--g);width:0}
 
-/* PROGRESS */
-#prog{position:fixed;top:0;left:0;height:2px;background:var(--g);z-index:1001;box-shadow:0 0 10px var(--g);width:0;transition:width .1s}
-
-/* CANVAS */
-#cvs{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
+/* PARTICLES BG */
+#bgcvs{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
 
 /* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 3rem;backdrop-filter:blur(24px);background:rgba(7,7,7,.82);border-bottom:1px solid var(--gb);transition:padding .3s}
-nav.scrolled{padding:.7rem 3rem}
-.logo{display:flex;align-items:center;gap:.6rem;text-decoration:none}
-.logo svg{height:38px;width:auto}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1rem 3rem;backdrop-filter:blur(24px);background:rgba(7,7,7,.85);border-bottom:1px solid var(--gb);transition:padding .3s}
+.logo{display:flex;align-items:center;gap:.5rem;text-decoration:none}
+.logo svg{height:36px;width:auto}
 .nav-links{display:flex;gap:2rem;list-style:none}
-.nav-links a{color:var(--gray);text-decoration:none;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;transition:color .3s;position:relative}
+.nav-links a{color:var(--gray);text-decoration:none;font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;transition:color .3s;position:relative}
 .nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:var(--g);transition:width .3s}
 .nav-links a:hover{color:var(--g)}
 .nav-links a:hover::after{width:100%}
 .nav-right{display:flex;align-items:center;gap:.8rem}
-.btn-wa{display:flex;align-items:center;gap:.45rem;background:var(--g);color:#000;padding:.5rem 1.1rem;font-weight:700;font-size:.78rem;letter-spacing:.06em;text-decoration:none;transition:all .3s;border-radius:2px}
-.btn-wa:hover{background:#00ffb5;box-shadow:0 0 25px rgba(0,229,160,.45);transform:translateY(-1px)}
-.btn-wa svg{width:16px;height:16px}
-.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
-.hamburger span{display:block;width:24px;height:2px;background:var(--g);transition:all .3s}
-@media(max-width:900px){.nav-links{display:none}.hamburger{display:flex}nav{padding:1rem 1.4rem}}
-
-/* MAIN */
-main{position:relative;z-index:1}
+.btn-wa{display:flex;align-items:center;gap:.4rem;background:var(--g);color:#000;padding:.5rem 1.1rem;font-weight:700;font-size:.76rem;text-decoration:none;transition:all .3s;border-radius:2px}
+.btn-wa:hover{box-shadow:0 0 25px rgba(0,229,160,.5);transform:translateY(-1px)}
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer}
+.ham span{display:block;width:24px;height:2px;background:var(--g)}
+@media(max-width:900px){.nav-links{display:none}.ham{display:flex}nav{padding:1rem 1.4rem}}
 
 /* HERO */
-#hero{height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.hero-inner{text-align:center;z-index:2;position:relative;padding:0 1.5rem}
-.hero-badge{display:inline-flex;align-items:center;gap:.5rem;border:1px solid var(--gb);padding:.4rem 1rem;font-size:.7rem;letter-spacing:.3em;color:var(--g);text-transform:uppercase;margin-bottom:2rem;opacity:0;animation:fadeUp .8s ease .4s forwards}
-.hero-badge span{width:6px;height:6px;background:var(--g);border-radius:50%;animation:blink 1.5s ease infinite}
-.hero-title{font-family:var(--fh);font-size:clamp(3.5rem,12vw,11rem);font-weight:900;line-height:.88;letter-spacing:-.02em;margin-bottom:.6rem;position:relative}
-.hero-title .outline{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.1)}
+#hero{position:relative;z-index:1;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+.hero-top{text-align:center;z-index:10;position:relative;padding:0 1.5rem;margin-bottom:2rem}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;border:1px solid var(--gb);padding:.35rem .9rem;font-size:.68rem;letter-spacing:.3em;color:var(--g);text-transform:uppercase;margin-bottom:1.2rem;opacity:0;animation:fup .8s ease .4s forwards}
+.hero-badge b{width:5px;height:5px;background:var(--g);border-radius:50%;animation:blink 1.5s ease infinite}
+.hero-title{font-family:var(--fh);font-size:clamp(3rem,11vw,10rem);font-weight:900;line-height:.9;letter-spacing:-.02em;position:relative;margin-bottom:.4rem}
+.hero-title .out{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.1)}
 .hero-title .fill{position:absolute;top:0;left:0;right:0;clip-path:inset(0 100% 0 0);animation:reveal 1.4s cubic-bezier(.77,0,.175,1) .8s forwards}
-.hero-sub{font-family:var(--fh);font-size:clamp(.75rem,2vw,1.2rem);color:var(--g);letter-spacing:.4em;text-transform:uppercase;margin-bottom:.6rem;opacity:0;animation:fadeUp .8s ease 1.6s forwards}
-.hero-desc{color:var(--gray);font-size:clamp(.85rem,1.5vw,1.05rem);max-width:50ch;margin:0 auto 2.5rem;line-height:1.8;opacity:0;animation:fadeUp .8s ease 1.9s forwards}
-.hero-ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeUp .8s ease 2.1s forwards}
-.btn-primary{background:var(--g);color:#000;border:none;padding:.85rem 2rem;font-family:var(--fh);font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .3s;text-decoration:none;display:inline-block;font-weight:700}
-.btn-primary:hover{background:#00ffb5;box-shadow:0 0 35px rgba(0,229,160,.5);transform:translateY(-2px)}
-.btn-outline{background:transparent;color:var(--g);border:1px solid var(--g);padding:.85rem 2rem;font-family:var(--fh);font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .3s;text-decoration:none;display:inline-block}
-.btn-outline:hover{background:var(--g3);box-shadow:0 0 20px rgba(0,229,160,.2)}
-.hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;animation:fadeIn 1s ease 3s forwards}
-.hero-scroll span{font-size:.65rem;letter-spacing:.3em;color:var(--gray);text-transform:uppercase}
-.scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--g),transparent);animation:pulse-line 2s ease infinite}
-.assembly-label{position:absolute;bottom:5.5rem;left:50%;transform:translateX(-50%);font-family:var(--fh);font-size:.62rem;letter-spacing:.3em;color:var(--g);opacity:0;white-space:nowrap;transition:opacity .5s}
+.hero-sub{font-family:var(--fh);font-size:clamp(.7rem,1.8vw,1.1rem);color:var(--g);letter-spacing:.4em;text-transform:uppercase;opacity:0;animation:fup .8s ease 1.6s forwards}
 
-/* BRANDS STRIP */
-#brands{background:rgba(0,229,160,.04);border-top:1px solid var(--gb);border-bottom:1px solid var(--gb);padding:2.5rem 1.5rem}
+/* CAR SCENE */
+.car-scene{position:relative;z-index:5;width:100%;max-width:960px;padding:0 1rem}
+#herocar{width:100%;filter:drop-shadow(0 0 25px rgba(0,229,160,.15))}
+#asm-wrap{text-align:center;margin-top:.8rem;min-height:28px}
+.asm-hint{font-family:var(--fh);font-size:.62rem;letter-spacing:.3em;color:var(--g);opacity:.7;text-transform:uppercase;animation:pulse-op 2s ease infinite}
+.asm-done{font-family:var(--fh);font-size:.68rem;letter-spacing:.3em;color:var(--g);display:none}
+.asm-done::before{content:'⬡ '}
+#asm-bar-wrap{width:200px;height:2px;background:rgba(0,229,160,.15);margin:.6rem auto 0;display:none}
+#asm-bar{height:100%;background:var(--g);width:0%;box-shadow:0 0 8px var(--g);transition:width .1s}
+.hero-ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem;opacity:0;animation:fup .8s ease 2.2s forwards}
+.btn-p{background:var(--g);color:#000;border:none;padding:.8rem 1.8rem;font-family:var(--fh);font-size:.76rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .3s;text-decoration:none;font-weight:700}
+.btn-p:hover{box-shadow:0 0 30px rgba(0,229,160,.5);transform:translateY(-2px)}
+.btn-o{background:transparent;color:var(--g);border:1px solid var(--g);padding:.8rem 1.8rem;font-family:var(--fh);font-size:.76rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .3s;text-decoration:none}
+.btn-o:hover{background:var(--gd)}
+
+/* BRAND STRIP */
+#brands{background:rgba(0,229,160,.03);border-top:1px solid var(--gb);border-bottom:1px solid var(--gb);padding:2.2rem 1.5rem;position:relative;z-index:1}
 .brands-inner{max-width:1200px;margin:0 auto}
-.brands-label{font-family:var(--fh);font-size:.65rem;letter-spacing:.4em;color:var(--g);text-align:center;margin-bottom:1.8rem;text-transform:uppercase}
-.brands-grid{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap}
-.brand-item{padding:1.2rem 3rem;border-right:1px solid var(--gb);cursor:pointer;transition:all .3s;text-align:center;position:relative}
-.brand-item:last-child{border-right:none}
-.brand-item::before{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:2px;background:var(--g);transition:width .3s;box-shadow:0 0 8px var(--g)}
-.brand-item:hover::before,.brand-item.active::before{width:60%}
-.brand-item:hover .brand-name,.brand-item.active .brand-name{color:var(--g)}
-.brand-name{font-family:var(--fh);font-size:1.1rem;font-weight:700;color:var(--gray);letter-spacing:.1em;transition:color .3s}
-.brand-tagline{font-size:.68rem;color:var(--gray2);letter-spacing:.08em;margin-top:.3rem}
-.brand-item.soon{opacity:.45;cursor:default}
-@media(max-width:600px){.brand-item{padding:.9rem 1.5rem}}
+.brands-lbl{font-family:var(--fh);font-size:.62rem;letter-spacing:.45em;color:var(--g);text-align:center;margin-bottom:1.6rem;text-transform:uppercase}
+.brands-row{display:flex;align-items:center;justify-content:center;flex-wrap:wrap}
+.brand-btn{padding:1.1rem 2.8rem;border-right:1px solid var(--gb);cursor:pointer;transition:all .3s;text-align:center;position:relative;border-bottom:2px solid transparent}
+.brand-btn:last-child{border-right:none}
+.brand-btn:hover,.brand-btn.active{border-bottom-color:var(--g)}
+.brand-btn:hover .bn,.brand-btn.active .bn{color:var(--g)}
+.bn{font-family:var(--fh);font-size:1rem;font-weight:700;color:var(--gray);letter-spacing:.1em;transition:color .3s}
+.bs{font-size:.65rem;color:var(--gray2);margin-top:.25rem;letter-spacing:.08em}
+.brand-btn.soon{opacity:.4;pointer-events:none}
+@media(max-width:600px){.brand-btn{padding:.8rem 1.4rem}}
 
-/* SECTION COMMONS */
-.s-label{font-family:var(--fh);font-size:.65rem;letter-spacing:.45em;color:var(--g);text-transform:uppercase;margin-bottom:1rem}
-.s-title{font-family:var(--fh);font-size:clamp(2rem,5vw,4rem);font-weight:900;line-height:1;letter-spacing:-.02em;margin-bottom:1.2rem}
-.s-title .ac{color:var(--g)}
-.s-body{color:var(--gray);font-size:1rem;line-height:1.85;max-width:50ch}
-.nline{height:1px;background:linear-gradient(90deg,transparent,var(--g),transparent);margin:2rem 0;opacity:.6}
-.reveal{opacity:0;transform:translateY(35px);transition:opacity .8s ease,transform .8s ease}
-.reveal.vis{opacity:1;transform:translateY(0)}
+/* SHARED */
+.sec{position:relative;z-index:1}
+.sl{font-family:var(--fh);font-size:.64rem;letter-spacing:.45em;color:var(--g);text-transform:uppercase;margin-bottom:.9rem}
+.st{font-family:var(--fh);font-size:clamp(1.9rem,4.5vw,3.8rem);font-weight:900;line-height:1;letter-spacing:-.02em;margin-bottom:1.1rem}
+.st .ac{color:var(--g)}
+.sb{color:var(--gray);font-size:1rem;line-height:1.85;max-width:50ch}
+.nline{height:1px;background:linear-gradient(90deg,transparent,var(--g),transparent);margin:1.8rem 0;opacity:.5}
+.rev{opacity:0;transform:translateY(32px);transition:opacity .8s,transform .8s}
+.rev.vis{opacity:1;transform:none}
 
-/* XIAOMI SPOTLIGHT */
-#xiaomi-spot{padding:7rem 1.5rem;position:relative}
-.spot-inner{max-width:1300px;margin:0 auto}
-.spot-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
-.spot-info .s-body{margin-bottom:2rem}
-.spot-stats{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2.5rem}
-.stat-box{padding:1.2rem;border:1px solid var(--gb);position:relative;background:var(--g3)}
-.stat-box::after{content:'';position:absolute;top:0;right:0;width:30px;height:2px;background:var(--g)}
-.stat-val{font-family:var(--fh);font-size:1.9rem;font-weight:700;color:var(--g);line-height:1}
-.stat-unit{font-size:.75rem;color:var(--gray);display:inline}
-.stat-lbl{font-size:.72rem;color:var(--gray);letter-spacing:.1em;margin-top:.3rem}
-.spot-visual{position:relative;background:radial-gradient(ellipse at center,rgba(0,229,160,.08) 0%,transparent 70%);padding:2rem;min-height:320px;display:flex;align-items:center;justify-content:center;border:1px solid var(--gb)}
-.spot-visual img{width:100%;max-width:540px;filter:drop-shadow(0 0 40px rgba(0,229,160,.25));transition:filter .5s}
-.spot-visual:hover img{filter:drop-shadow(0 0 60px rgba(0,229,160,.45))}
-.spot-visual-fallback{width:100%;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center}
-/* Car SVG fallback */
-.car-svg{width:100%;max-width:500px;filter:drop-shadow(0 0 30px rgba(0,229,160,.4))}
-.model-tabs{display:flex;gap:.5rem;margin-bottom:2.5rem}
-.model-tab{padding:.55rem 1.3rem;border:1px solid var(--gb);background:transparent;color:var(--gray);font-family:var(--fh);font-size:.72rem;letter-spacing:.15em;cursor:pointer;transition:all .3s}
-.model-tab.active{border-color:var(--g);color:var(--g);background:var(--g3)}
-@media(max-width:768px){.spot-grid{grid-template-columns:1fr;gap:2.5rem}.spot-stats{grid-template-columns:1fr 1fr}}
+/* SPOTLIGHT */
+#spot{padding:7rem 1.5rem}
+.spot-inner{max-width:1280px;margin:0 auto}
+.spot-top{text-align:center;margin-bottom:3.5rem}
+.spot-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+.model-tabs{display:flex;gap:.5rem;margin-bottom:2rem;flex-wrap:wrap}
+.mtab{padding:.5rem 1.2rem;border:1px solid var(--gb);background:transparent;color:var(--gray);font-family:var(--fh);font-size:.7rem;letter-spacing:.14em;cursor:pointer;transition:all .3s}
+.mtab.active{border-color:var(--g);color:var(--g);background:var(--gd)}
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:2rem}
+.sbox{padding:1.1rem;border:1px solid var(--gb);background:var(--gd)}
+.sbox::after{content:'';display:block;height:2px;background:var(--g);margin-top:.8rem;width:30px}
+.sv{font-family:var(--fh);font-size:1.8rem;font-weight:700;color:var(--g);line-height:1}
+.su2{font-size:.7rem;color:var(--gray)}
+.sl2{font-size:.7rem;color:var(--gray);margin-top:.3rem;letter-spacing:.1em}
+.car-img-box{border:1px solid var(--gb);background:radial-gradient(ellipse at center,rgba(0,229,160,.07) 0%,transparent 70%);padding:2rem;display:flex;align-items:center;justify-content:center;min-height:280px}
+.car-img-box img{max-width:100%;filter:drop-shadow(0 0 30px rgba(0,229,160,.2))}
+.car-img-box svg{width:100%;max-width:520px;filter:drop-shadow(0 0 20px rgba(0,229,160,.25))}
+@media(max-width:768px){.spot-grid{grid-template-columns:1fr}}
 
 /* CARS GRID */
-#cars{padding:7rem 1.5rem;background:rgba(0,0,0,.4)}
-.cars-inner{max-width:1300px;margin:0 auto}
-.cars-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:3rem;flex-wrap:wrap;gap:1rem}
-.filter-tabs{display:flex;gap:.5rem;flex-wrap:wrap}
-.ftab{padding:.45rem 1.1rem;border:1px solid var(--gb);background:transparent;color:var(--gray);font-size:.75rem;letter-spacing:.12em;cursor:pointer;transition:all .3s;text-transform:uppercase}
-.ftab.active,.ftab:hover{border-color:var(--g);color:var(--g);background:var(--g3)}
-.cars-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.5rem}
-.car-card{background:var(--bg2);border:1px solid var(--gb);overflow:hidden;transition:all .4s;cursor:pointer;position:relative}
-.car-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 110%,rgba(0,229,160,.07) 0%,transparent 65%);opacity:0;transition:opacity .4s;pointer-events:none}
-.car-card:hover{border-color:rgba(0,229,160,.6);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,.5)}
-.car-card:hover::before{opacity:1}
-.car-img{width:100%;aspect-ratio:16/9;overflow:hidden;background:linear-gradient(135deg,#0d1a14,#0a0a0a);display:flex;align-items:center;justify-content:center;position:relative}
-.car-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
-.car-card:hover .car-img img{transform:scale(1.04)}
-.car-img .brand-badge{position:absolute;top:.8rem;left:.8rem;background:var(--bg);border:1px solid var(--gb);padding:.25rem .65rem;font-family:var(--fh);font-size:.58rem;letter-spacing:.15em;color:var(--g)}
-.car-img .type-badge{position:absolute;top:.8rem;right:.8rem;background:rgba(0,229,160,.15);border:1px solid var(--gb);padding:.25rem .65rem;font-size:.6rem;color:var(--gray);letter-spacing:.1em}
-.car-body{padding:1.5rem}
-.car-name{font-family:var(--fh);font-size:1.5rem;font-weight:700;color:var(--g);margin-bottom:.2rem;line-height:1}
-.car-brand-sub{font-size:.78rem;color:var(--gray);letter-spacing:.1em;margin-bottom:1rem}
-.car-price{font-family:var(--fh);font-size:1.65rem;font-weight:700;color:var(--g);margin-bottom:.25rem}
-.car-price-sub{font-size:.7rem;color:var(--gray2);letter-spacing:.08em;margin-bottom:1.2rem}
-.car-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:1.4rem;padding:1rem 0;border-top:1px solid var(--gb);border-bottom:1px solid var(--gb)}
-.cs-val{font-family:var(--fh);font-size:1.1rem;font-weight:600;color:var(--white)}
-.cs-unit{font-size:.65rem;color:var(--gray)}
-.cs-lbl{font-size:.65rem;color:var(--gray2);letter-spacing:.08em;margin-top:.15rem;display:flex;align-items:center;gap:.3rem}
-.cs-lbl svg{width:10px;height:10px;color:var(--g)}
-.car-cta{display:flex;gap:.6rem}
-.btn-card{flex:1;padding:.7rem .5rem;font-size:.72rem;letter-spacing:.1em;font-family:var(--fh);cursor:pointer;transition:all .3s;border:none;text-align:center}
-.btn-card-primary{background:var(--g);color:#000;font-weight:700}
-.btn-card-primary:hover{background:#00ffb5;box-shadow:0 0 20px rgba(0,229,160,.4)}
-.btn-card-outline{background:transparent;color:var(--g);border:1px solid var(--gb)}
-.btn-card-outline:hover{border-color:var(--g);background:var(--g3)}
-/* Car image fallback SVG */
-.car-placeholder{width:100%;padding:2rem;display:flex;align-items:center;justify-content:center}
-.car-placeholder svg{width:85%;opacity:.6;filter:drop-shadow(0 0 12px var(--g))}
+#cars{padding:7rem 1.5rem;background:rgba(0,0,0,.35)}
+.cars-inner{max-width:1280px;margin:0 auto}
+.cars-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2.8rem;flex-wrap:wrap;gap:1rem}
+.ftabs{display:flex;gap:.4rem;flex-wrap:wrap}
+.ft{padding:.42rem 1rem;border:1px solid var(--gb);background:transparent;color:var(--gray);font-size:.72rem;letter-spacing:.1em;cursor:pointer;transition:all .3s;text-transform:uppercase}
+.ft.active,.ft:hover{border-color:var(--g);color:var(--g);background:var(--gd)}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.4rem}
+.ccard{background:#0d0d0d;border:1px solid var(--gb);overflow:hidden;transition:all .4s;cursor:pointer}
+.ccard:hover{border-color:rgba(0,229,160,.6);transform:translateY(-4px);box-shadow:0 18px 50px rgba(0,0,0,.5)}
+.cimg{width:100%;aspect-ratio:16/9;overflow:hidden;background:#0d0d0d;display:flex;align-items:center;justify-content:center;position:relative}
+.cimg img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.ccard:hover .cimg img{transform:scale(1.05)}
+.cimg .bb{position:absolute;top:.7rem;left:.7rem;background:var(--bg);border:1px solid var(--gb);padding:.22rem .6rem;font-family:var(--fh);font-size:.56rem;letter-spacing:.14em;color:var(--g)}
+.cimg .tb{position:absolute;top:.7rem;right:.7rem;background:rgba(0,229,160,.12);border:1px solid var(--gb);padding:.22rem .6rem;font-size:.58rem;color:var(--gray)}
+.cbody{padding:1.4rem}
+.cname{font-family:var(--fh);font-size:1.4rem;font-weight:700;color:var(--g);line-height:1;margin-bottom:.18rem}
+.csub{font-size:.75rem;color:var(--gray);letter-spacing:.08em;margin-bottom:.9rem}
+.cprice{font-family:var(--fh);font-size:1.55rem;font-weight:700;color:var(--g)}
+.cpsub{font-size:.68rem;color:var(--gray2);margin-bottom:1.1rem}
+.cstats{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;padding:.9rem 0;border-top:1px solid var(--gb);border-bottom:1px solid var(--gb);margin-bottom:1.2rem}
+.csv{font-family:var(--fh);font-size:1.05rem;font-weight:600}
+.csu{font-size:.62rem;color:var(--gray)}
+.csl{font-size:.62rem;color:var(--gray2);margin-top:.1rem}
+.ccta{display:flex;gap:.5rem}
+.bc{flex:1;padding:.65rem;font-size:.7rem;letter-spacing:.1em;font-family:var(--fh);cursor:pointer;transition:all .3s;border:none;text-align:center}
+.bc-p{background:var(--g);color:#000;font-weight:700}
+.bc-p:hover{box-shadow:0 0 18px rgba(0,229,160,.4)}
+.bc-o{background:transparent;color:var(--g);border:1px solid var(--gb)}
+.bc-o:hover{border-color:var(--g);background:var(--gd)}
+.car-ph{width:100%;padding:1.5rem 2rem;display:flex;align-items:center;justify-content:center}
+.car-ph svg{width:92%;opacity:.55}
 
-/* CUSTOM ORDER */
-#order{padding:7rem 1.5rem;background:rgba(0,0,0,.25)}
-.order-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 420px;gap:4rem;align-items:start}
-.order-options{background:var(--panel);border:1px solid var(--gb);padding:2.5rem}
-.order-options::before{content:'';display:block;height:2px;background:linear-gradient(90deg,var(--g),transparent);margin-bottom:2.5rem}
-.order-summary{background:var(--panel);border:1px solid var(--gb);padding:2.5rem;position:sticky;top:90px}
-.o-sec{margin-bottom:2.5rem;padding-bottom:2.5rem;border-bottom:1px solid rgba(0,229,160,.12)}
-.o-sec:last-child{border:none;margin:0;padding:0}
-.o-sec-title{font-family:var(--fh);font-size:.68rem;letter-spacing:.3em;color:var(--g);text-transform:uppercase;margin-bottom:1.2rem}
-.o-toggle{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
-.o-tbtn{border:1px solid var(--gb);background:transparent;padding:1.2rem;cursor:pointer;color:var(--white);text-align:left;transition:all .3s}
-.o-tbtn.active{border-color:var(--g);background:var(--g3)}
-.o-tbtn:hover{border-color:rgba(0,229,160,.5)}
-.o-tname{font-family:var(--fh);font-size:1.3rem;font-weight:700;display:block;margin-bottom:.2rem}
-.o-tsub{font-size:.75rem;color:var(--gray)}
-.o-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}
-.o-opt{border:1px solid var(--gb);background:transparent;padding:.85rem .5rem;cursor:pointer;color:var(--white);text-align:center;transition:all .3s;font-family:var(--fb)}
-.o-opt.active{border-color:var(--g);background:var(--g3)}
-.o-opt:hover{border-color:rgba(0,229,160,.45)}
-.o-oname{font-size:.82rem;font-weight:600;display:block;margin-bottom:.2rem}
-.o-oprice{font-size:.68rem;color:var(--g)}
-.o-colors{display:flex;gap:.6rem;flex-wrap:wrap}
-.o-cbtn{width:36px;height:36px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:all .3s}
-.o-cbtn.active{border-color:var(--g);box-shadow:0 0 12px var(--g)}
-.sum-title{font-family:var(--fh);font-size:.68rem;letter-spacing:.3em;color:var(--g);margin-bottom:1.5rem}
-.sum-model{font-family:var(--fh);font-size:2rem;font-weight:900;line-height:1;margin-bottom:.3rem}
-.sum-sub{color:var(--gray);font-size:.78rem;margin-bottom:1.5rem}
-.sum-items{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem}
-.sum-item{display:flex;justify-content:space-between;font-size:.82rem;color:var(--gray);padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,.04)}
-.sum-item .val{color:var(--white)}
-.sum-total{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 0;border-top:1px solid var(--gb);border-bottom:1px solid var(--gb);margin-bottom:1.5rem}
-.sum-total-label{font-family:var(--fh);font-size:.68rem;letter-spacing:.2em;color:var(--gray)}
-.sum-total-price{font-family:var(--fh);font-size:1.6rem;font-weight:900;color:var(--g)}
-.sum-note{font-size:.68rem;color:var(--gray2);line-height:1.65;margin-top:1rem}
-@media(max-width:900px){.order-inner{grid-template-columns:1fr}.order-summary{position:relative;top:0}}
+/* ORDER */
+#order{padding:7rem 1.5rem;background:rgba(0,0,0,.22)}
+.ord-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 400px;gap:4rem;align-items:start}
+.ord-opts{background:var(--p);border:1px solid var(--gb);padding:2.5rem}
+.ord-sum{background:var(--p);border:1px solid var(--gb);padding:2.5rem;position:sticky;top:88px}
+.osec{margin-bottom:2.4rem;padding-bottom:2.4rem;border-bottom:1px solid rgba(0,229,160,.1)}
+.osec:last-child{border:none;margin:0;padding:0}
+.osect{font-family:var(--fh);font-size:.66rem;letter-spacing:.28em;color:var(--g);text-transform:uppercase;margin-bottom:1.1rem}
+.otog{display:grid;grid-template-columns:1fr 1fr;gap:.65rem}
+.otbtn{border:1px solid var(--gb);background:transparent;padding:1.1rem;cursor:pointer;color:#fff;text-align:left;transition:all .3s}
+.otbtn.active{border-color:var(--g);background:var(--gd)}
+.otbtn:hover{border-color:rgba(0,229,160,.5)}
+.otn{font-family:var(--fh);font-size:1.2rem;font-weight:700;display:block;margin-bottom:.18rem}
+.ots{font-size:.72rem;color:var(--gray)}
+.og3{display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem}
+.oopt{border:1px solid var(--gb);background:transparent;padding:.8rem .4rem;cursor:pointer;color:#fff;text-align:center;transition:all .3s;font-family:var(--fb)}
+.oopt.active{border-color:var(--g);background:var(--gd)}
+.oopt:hover{border-color:rgba(0,229,160,.45)}
+.oon{font-size:.8rem;font-weight:600;display:block;margin-bottom:.18rem}
+.oop{font-size:.66rem;color:var(--g)}
+.ocolors{display:flex;gap:.6rem;flex-wrap:wrap}
+.ocb{width:34px;height:34px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:all .3s}
+.ocb.active{border-color:var(--g);box-shadow:0 0 12px var(--g)}
+.sumtit{font-family:var(--fh);font-size:.65rem;letter-spacing:.28em;color:var(--g);margin-bottom:1.4rem}
+.summod{font-family:var(--fh);font-size:1.9rem;font-weight:900;line-height:1;margin-bottom:.3rem}
+.sumsub{color:var(--gray);font-size:.76rem;margin-bottom:1.3rem}
+.sumitems{display:flex;flex-direction:column;gap:.45rem;margin-bottom:1.3rem}
+.si{display:flex;justify-content:space-between;font-size:.8rem;color:var(--gray);padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.si .v{color:#fff}
+.stot{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 0;border-top:1px solid var(--gb);border-bottom:1px solid var(--gb);margin-bottom:1.4rem}
+.stlbl{font-family:var(--fh);font-size:.66rem;letter-spacing:.18em;color:var(--gray)}
+.stprice{font-family:var(--fh);font-size:1.55rem;font-weight:900;color:var(--g)}
+.wa-btn{display:flex;align-items:center;justify-content:center;gap:.6rem;background:var(--g);color:#000;padding:.9rem;font-family:var(--fh);font-size:.76rem;font-weight:700;letter-spacing:.14em;text-decoration:none;transition:all .3s;margin-top:.65rem}
+.wa-btn:hover{box-shadow:0 0 28px rgba(0,229,160,.4)}
+@media(max-width:900px){.ord-inner{grid-template-columns:1fr}.ord-sum{position:relative;top:0}}
 
 /* TRUST */
-#trust{padding:6rem 1.5rem;background:rgba(0,229,160,.03);border-top:1px solid var(--gb)}
-.trust-inner{max-width:1200px;margin:0 auto}
-.trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-top:3.5rem}
-.trust-card{padding:2rem 1.5rem;border:1px solid var(--gb);position:relative;overflow:hidden;transition:all .4s}
-.trust-card::before{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--g);transition:width .5s}
-.trust-card:hover::before{width:100%}
-.trust-icon{font-size:2rem;margin-bottom:1.2rem;display:block}
-.trust-name{font-family:var(--fh);font-size:.9rem;font-weight:700;margin-bottom:.6rem}
-.trust-desc{font-size:.83rem;color:var(--gray);line-height:1.7}
-@media(max-width:768px){.trust-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:480px){.trust-grid{grid-template-columns:1fr}}
+#trust{padding:6rem 1.5rem;background:rgba(0,229,160,.025);border-top:1px solid var(--gb)}
+.tr-inner{max-width:1200px;margin:0 auto}
+.tgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.3rem;margin-top:3rem}
+.tcard{padding:1.8rem 1.4rem;border:1px solid var(--gb);transition:all .4s;position:relative;overflow:hidden}
+.tcard::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--g);transition:width .5s}
+.tcard:hover::after{width:100%}
+.tico{font-size:1.8rem;margin-bottom:1rem;display:block}
+.tname{font-family:var(--fh);font-size:.85rem;font-weight:700;margin-bottom:.5rem}
+.tdesc{font-size:.8rem;color:var(--gray);line-height:1.7}
+@media(max-width:768px){.tgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.tgrid{grid-template-columns:1fr}}
 
 /* CONTACT */
 #contact{padding:7rem 1.5rem}
-.contact-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
-.c-info .s-body{margin-bottom:2.5rem}
-.c-details{display:flex;flex-direction:column;gap:1.5rem}
-.c-item{display:flex;gap:1.2rem;align-items:flex-start}
-.c-icon{width:36px;height:36px;border:1px solid var(--g);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.85rem;color:var(--g)}
-.c-text h4{font-family:var(--fh);font-size:.65rem;letter-spacing:.2em;color:var(--g);margin-bottom:.2rem}
-.c-text p{color:var(--gray);font-size:.85rem;line-height:1.65}
-.c-text a{color:var(--g);text-decoration:none}
-.c-form{background:var(--panel);border:1px solid var(--gb);padding:2.5rem}
-.c-form::before{content:'';display:block;height:2px;background:linear-gradient(90deg,var(--g),transparent);margin-bottom:2.5rem}
-.fg{margin-bottom:1.3rem}
-.fl{display:block;font-family:var(--fh);font-size:.65rem;letter-spacing:.2em;color:var(--g);margin-bottom:.4rem}
-.fi,.fsel,.fta{width:100%;background:rgba(0,229,160,.03);border:1px solid var(--gb);color:var(--white);padding:.78rem .95rem;font-family:var(--fb);font-size:.88rem;outline:none;transition:border-color .3s;-webkit-appearance:none}
+.ct-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.ct-dets{display:flex;flex-direction:column;gap:1.4rem;margin-top:2.5rem}
+.ct-item{display:flex;gap:1.1rem;align-items:flex-start}
+.ct-ico{width:34px;height:34px;border:1px solid var(--g);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.8rem;color:var(--g)}
+.ct-txt h4{font-family:var(--fh);font-size:.62rem;letter-spacing:.2em;color:var(--g);margin-bottom:.18rem}
+.ct-txt p,.ct-txt a{color:var(--gray);font-size:.83rem;line-height:1.65;text-decoration:none}
+.ct-txt a{color:var(--g)}
+.cform{background:var(--p);border:1px solid var(--gb);padding:2.5rem}
+.fg{margin-bottom:1.2rem}
+.fl{display:block;font-family:var(--fh);font-size:.62rem;letter-spacing:.2em;color:var(--g);margin-bottom:.38rem}
+.fi,.fsel,.fta{width:100%;background:rgba(0,229,160,.025);border:1px solid var(--gb);color:#fff;padding:.75rem .9rem;font-family:var(--fb);font-size:.86rem;outline:none;transition:border-color .3s}
 .fi:focus,.fsel:focus,.fta:focus{border-color:var(--g);box-shadow:0 0 12px rgba(0,229,160,.1)}
 .fi::placeholder,.fta::placeholder{color:var(--gray2)}
-.fsel{background:#0d0d0d}
-.fsel option{background:#0d0d0d}
-.fta{resize:vertical;min-height:110px}
+.fsel{background:#0d0d0d}.fsel option{background:#0d0d0d}
+.fta{resize:vertical;min-height:100px}
 .frow{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.wa-big{display:flex;align-items:center;justify-content:center;gap:.75rem;background:var(--g);color:#000;padding:1rem;font-family:var(--fh);font-size:.82rem;font-weight:700;letter-spacing:.15em;text-decoration:none;transition:all .3s;margin-top:1rem}
-.wa-big:hover{background:#00ffb5;box-shadow:0 0 30px rgba(0,229,160,.4)}
-.wa-big svg{width:20px;height:20px}
-@media(max-width:768px){.contact-inner{grid-template-columns:1fr}.frow{grid-template-columns:1fr}}
+@media(max-width:768px){.ct-inner{grid-template-columns:1fr}.frow{grid-template-columns:1fr}}
 
 /* FOOTER */
 footer{border-top:1px solid var(--gb);padding:3rem 1.5rem}
-.footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:3rem}
-.footer-brand p{font-size:.82rem;color:var(--gray);line-height:1.75;margin-top:1rem;max-width:28ch}
-.footer-socials{display:flex;gap:.75rem;margin-top:1.2rem}
-.footer-social{width:32px;height:32px;border:1px solid var(--gb);display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--gray);text-decoration:none;transition:all .3s}
-.footer-social:hover{border-color:var(--g);color:var(--g)}
-.footer-col h4{font-family:var(--fh);font-size:.7rem;letter-spacing:.25em;color:var(--g);margin-bottom:1.2rem}
-.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:.65rem}
-.footer-col ul a{color:var(--gray);text-decoration:none;font-size:.82rem;transition:color .3s}
-.footer-col ul a:hover{color:var(--g)}
-.footer-bottom{max-width:1200px;margin:2rem auto 0;padding-top:1.5rem;border-top:1px solid var(--gb);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.75rem}
-.footer-bottom p{font-size:.72rem;color:var(--gray2)}
-@media(max-width:768px){.footer-inner{grid-template-columns:1fr 1fr}.footer-inner>div:first-child{grid-column:1/-1}}
-@media(max-width:480px){.footer-inner{grid-template-columns:1fr}}
+.fi2{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:3rem}
+.fb p{font-size:.8rem;color:var(--gray);line-height:1.75;margin-top:.9rem;max-width:26ch}
+.fsoc{display:flex;gap:.65rem;margin-top:1.1rem}
+.fsoc a{width:30px;height:30px;border:1px solid var(--gb);display:flex;align-items:center;justify-content:center;font-size:.72rem;color:var(--gray);text-decoration:none;transition:all .3s}
+.fsoc a:hover{border-color:var(--g);color:var(--g)}
+.fcol h4{font-family:var(--fh);font-size:.66rem;letter-spacing:.24em;color:var(--g);margin-bottom:1.1rem}
+.fcol ul{list-style:none;display:flex;flex-direction:column;gap:.6rem}
+.fcol ul a{color:var(--gray);text-decoration:none;font-size:.8rem;transition:color .3s}
+.fcol ul a:hover{color:var(--g)}
+.fbot{max-width:1200px;margin:2rem auto 0;padding-top:1.4rem;border-top:1px solid var(--gb);display:flex;justify-content:space-between;flex-wrap:wrap;gap:.6rem}
+.fbot p{font-size:.7rem;color:var(--gray2)}
+@media(max-width:768px){.fi2{grid-template-columns:1fr 1fr}.fi2>div:first-child{grid-column:1/-1}}
+@media(max-width:480px){.fi2{grid-template-columns:1fr}}
 
-/* WHATSAPP FLOAT */
-#wa-float{position:fixed;bottom:1.8rem;right:1.8rem;z-index:200;width:52px;height:52px;background:var(--g);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(0,229,160,.4);transition:all .3s;text-decoration:none}
-#wa-float:hover{transform:scale(1.1);box-shadow:0 6px 30px rgba(0,229,160,.6)}
-#wa-float svg{width:26px;height:26px;fill:#000}
+/* WA FLOAT */
+#waf{position:fixed;bottom:1.8rem;right:1.8rem;z-index:300;width:50px;height:50px;background:var(--g);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 18px rgba(0,229,160,.4);transition:all .3s;text-decoration:none}
+#waf:hover{transform:scale(1.12);box-shadow:0 6px 28px rgba(0,229,160,.6)}
+#waf svg{width:25px;height:25px;fill:#000}
 
-/* ANIMATIONS */
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+/* MOBILE MENU */
+.mob-menu{position:fixed;inset:0;background:rgba(7,7,7,.98);z-index:199;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.8rem;transform:translateX(100%);transition:transform .4s ease}
+.mob-menu.open{transform:none}
+.mob-menu a{font-family:var(--fh);font-size:1.1rem;letter-spacing:.2em;color:#fff;text-decoration:none;transition:color .3s}
+.mob-menu a:hover{color:var(--g)}
+.mob-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:var(--g);font-size:1.8rem;cursor:pointer}
+
+/* ANIMS */
+@keyframes fup{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 @keyframes reveal{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0% 0 0)}}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-@keyframes pulse-line{0%,100%{transform:scaleY(1);opacity:1}50%{transform:scaleY(.4);opacity:.2}}
-@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-
-/* MOBILE NAV MENU */
-.mobile-menu{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(7,7,7,.98);z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;transform:translateX(100%);transition:transform .4s ease}
-.mobile-menu.open{transform:translateX(0)}
-.mobile-menu a{font-family:var(--fh);font-size:1.2rem;letter-spacing:.2em;color:var(--white);text-decoration:none;transition:color .3s}
-.mobile-menu a:hover{color:var(--g)}
-.mobile-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:var(--g);font-size:1.8rem;cursor:pointer}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+@keyframes pulse-op{0%,100%{opacity:.7}50%{opacity:.3}}
+@keyframes glow-pulse{0%,100%{filter:drop-shadow(0 0 20px rgba(0,229,160,.18))}50%{filter:drop-shadow(0 0 40px rgba(0,229,160,.5))}}
+.car-assembled{animation:glow-pulse 2.5s ease infinite}
 </style>
 </head>
 <body>
 
-<div id="cur"></div>
-<div id="cur2"></div>
-<div id="prog"></div>
-<canvas id="cvs"></canvas>
+<div id="cur"></div><div id="cur2"></div><div id="prog"></div>
+<canvas id="bgcvs"></canvas>
 
-<!-- WHATSAPP FLOAT -->
-<a id="wa-float" href="https://wa.me/201000000000" target="_blank" title="Chat on WhatsApp">
+<a id="waf" href="https://wa.me/201000000000" target="_blank">
   <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
 </a>
 
-<!-- MOBILE MENU -->
-<div class="mobile-menu" id="mobileMenu">
-  <button class="mobile-close" onclick="toggleMenu()">✕</button>
-  <a href="#brands" onclick="toggleMenu()">Our Brands</a>
+<div class="mob-menu" id="mobMenu">
+  <button class="mob-close" onclick="toggleMenu()">✕</button>
+  <a href="#brands" onclick="toggleMenu()">Brands</a>
   <a href="#cars" onclick="toggleMenu()">All Cars</a>
   <a href="#order" onclick="toggleMenu()">Custom Order</a>
   <a href="#trust" onclick="toggleMenu()">Why Electra</a>
   <a href="#contact" onclick="toggleMenu()">Contact</a>
-  <a href="https://wa.me/201000000000" target="_blank" style="color:var(--g)">WhatsApp Us</a>
 </div>
 
 <!-- NAV -->
-<nav id="navbar">
+<nav>
   <a href="#" class="logo">
-    <svg viewBox="0 0 240 52" xmlns="http://www.w3.org/2000/svg">
-      <!-- Car body -->
-      <path d="M8,34 L8,42 L58,42 L58,34 Q52,24 46,22 L26,22 Q18,22 12,30 Z" fill="none" stroke="#00e5a0" stroke-width="1.8"/>
-      <!-- Roof bump -->
-      <path d="M20,22 Q22,14 30,13 L40,13 Q48,14 50,22" fill="none" stroke="#00e5a0" stroke-width="1.6"/>
-      <!-- Wheels -->
-      <circle cx="20" cy="42" r="5.5" fill="none" stroke="#00e5a0" stroke-width="1.8"/>
-      <circle cx="20" cy="42" r="2.2" fill="#00e5a0"/>
-      <circle cx="46" cy="42" r="5.5" fill="none" stroke="#00e5a0" stroke-width="1.8"/>
-      <circle cx="46" cy="42" r="2.2" fill="#00e5a0"/>
-      <!-- Lightning bolt -->
-      <path d="M34,15 L29,25 L33.5,25 L28,37 L42,21 L37,21 Z" fill="#00e5a0" opacity=".9"/>
-      <!-- Separator line -->
-      <line x1="70" y1="10" x2="70" y2="44" stroke="#00e5a0" stroke-width="1" opacity=".5"/>
-      <!-- ELECTRA text -->
-      <text x="78" y="33" font-family="Orbitron,sans-serif" font-size="19" font-weight="900" fill="#00e5a0" letter-spacing="1">ELECTRA</text>
-      <!-- Tagline -->
-      <text x="79" y="44" font-family="Inter,sans-serif" font-size="6.5" fill="#00e5a0" letter-spacing="3.5" opacity=".65">VEHICLES OF FUTURE</text>
+    <svg viewBox="0 0 240 50" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8,34 L8,42 L56,42 L56,34 Q50,24 44,22 L26,22 Q16,22 10,30 Z" fill="none" stroke="#00e5a0" stroke-width="1.8"/>
+      <path d="M18,22 Q20,14 28,13 L38,13 Q46,14 48,22" fill="none" stroke="#00e5a0" stroke-width="1.6"/>
+      <circle cx="18" cy="42" r="5" fill="none" stroke="#00e5a0" stroke-width="1.8"/>
+      <circle cx="18" cy="42" r="2" fill="#00e5a0"/>
+      <circle cx="46" cy="42" r="5" fill="none" stroke="#00e5a0" stroke-width="1.8"/>
+      <circle cx="46" cy="42" r="2" fill="#00e5a0"/>
+      <path d="M32,14 L28,24 L32,24 L26,36 L42,20 L37,20 Z" fill="#00e5a0" opacity=".9"/>
+      <line x1="68" y1="10" x2="68" y2="44" stroke="#00e5a0" stroke-width="1" opacity=".45"/>
+      <text x="76" y="32" font-family="Orbitron,sans-serif" font-size="18" font-weight="900" fill="#00e5a0" letter-spacing="1">ELECTRA</text>
+      <text x="77" y="43" font-family="Inter,sans-serif" font-size="6" fill="#00e5a0" letter-spacing="3.2" opacity=".6">VEHICLES OF FUTURE</text>
     </svg>
   </a>
   <ul class="nav-links">
@@ -325,368 +293,400 @@ footer{border-top:1px solid var(--gb);padding:3rem 1.5rem}
   </ul>
   <div class="nav-right">
     <a href="https://wa.me/201000000000" class="btn-wa" target="_blank">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
       WhatsApp
     </a>
-    <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+    <div class="ham" onclick="toggleMenu()"><span></span><span></span><span></span></div>
   </div>
 </nav>
 
 <main>
 
-<!-- HERO -->
+<!-- ═══════════════════════════════════════════════════
+     HERO — SVG CAR ASSEMBLY (scroll-driven)
+═══════════════════════════════════════════════════ -->
 <section id="hero">
-  <div class="hero-inner">
-    <div class="hero-badge"><span></span>Egypt's Premier EV Destination · Cairo &amp; Alexandria</div>
-    <div class="hero-title">
-      <div class="outline">ELECTRA</div>
-      <div class="fill" style="color:#fff">ELECTRA</div>
-    </div>
+  <div class="hero-top">
+    <div class="hero-badge"><b></b>Egypt's Premier EV Destination · Cairo &amp; Alexandria</div>
+    <div class="hero-title"><div class="out">ELECTRA</div><div class="fill">ELECTRA</div></div>
     <div class="hero-sub">Vehicles of Future</div>
-    <p class="hero-desc">We import and retail the world's most advanced electric vehicles. Xiaomi, BYD, Chery and more — delivered to Egypt with full warranty and after-sales support.</p>
+  </div>
+
+  <!-- THE SVG CAR — parts fly in and assemble on scroll -->
+  <div class="car-scene">
+    <svg id="herocar" viewBox="0 0 900 285" xmlns="http://www.w3.org/2000/svg" aria-label="Xiaomi SU7 assembly animation">
+      <defs>
+        <filter id="glow"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="glow2"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="glow3"><feGaussianBlur stdDeviation="12" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+
+      <!-- ── GROUND SHADOW ── -->
+      <ellipse cx="450" cy="279" rx="330" ry="9" fill="rgba(0,229,160,0.06)" filter="url(#glow2)"/>
+      <line x1="60" y1="277" x2="840" y2="277" stroke="rgba(0,229,160,0.12)" stroke-width="1"/>
+
+      <!-- ── REAR WHEEL (behind body) ── -->
+      <g class="cp cp-wheel-r" style="transform-origin:705px 232px">
+        <circle cx="705" cy="232" r="46" fill="#080808" stroke="#181818" stroke-width="3.5"/>
+        <circle cx="705" cy="232" r="32" fill="none" stroke="#141414" stroke-width="10"/>
+        <circle cx="705" cy="232" r="13" fill="#131313" stroke="#00e5a0" stroke-width="1.4" filter="url(#glow)"/>
+        <line x1="705" y1="198" x2="705" y2="216" stroke="#00e5a0" stroke-width="2.2" opacity=".65"/>
+        <line x1="705" y1="248" x2="705" y2="266" stroke="#00e5a0" stroke-width="2.2" opacity=".65"/>
+        <line x1="671" y1="232" x2="689" y2="232" stroke="#00e5a0" stroke-width="2.2" opacity=".65"/>
+        <line x1="721" y1="232" x2="739" y2="232" stroke="#00e5a0" stroke-width="2.2" opacity=".65"/>
+        <line x1="681" y1="208" x2="693" y2="220" stroke="#00e5a0" stroke-width="2" opacity=".55"/>
+        <line x1="717" y1="244" x2="729" y2="256" stroke="#00e5a0" stroke-width="2" opacity=".55"/>
+        <line x1="681" y1="256" x2="693" y2="244" stroke="#00e5a0" stroke-width="2" opacity=".55"/>
+        <line x1="717" y1="220" x2="729" y2="208" stroke="#00e5a0" stroke-width="2" opacity=".55"/>
+        <circle cx="705" cy="232" r="44" fill="none" stroke="#1a1a1a" stroke-width="1" stroke-dasharray="6 4"/>
+      </g>
+
+      <!-- ── FRONT WHEEL (behind body) ── -->
+      <g class="cp cp-wheel-f" style="transform-origin:195px 232px">
+        <circle cx="195" cy="232" r="46" fill="#080808" stroke="#181818" stroke-width="3.5"/>
+        <circle cx="195" cy="232" r="32" fill="none" stroke="#141414" stroke-width="10"/>
+        <circle cx="195" cy="232" r="13" fill="#131313" stroke="#00e5a0" stroke-width="1.4" filter="url(#glow)"/>
+        <line x1="195" y1="198" x2="195" y2="216" stroke="#00e5a0" stroke-width="2.2" opacity=".65"/>
+        <line x1="195" y1="248" x2="195" y2="266" stroke="#00e5a0" stroke-width="2.2" opacity=".65"/>
+        <line x1="161" y1="232" x2="179" y2="232" stroke="#00e5a0" stroke-width="2.2" opacity=".65"/>
+        <line x1="211" y1="232" x2="229" y2="232" stroke="#00e5a0" stroke-width="2.2" opacity=".65"/>
+        <line x1="171" y1="208" x2="183" y2="220" stroke="#00e5a0" stroke-width="2" opacity=".55"/>
+        <line x1="207" y1="244" x2="219" y2="256" stroke="#00e5a0" stroke-width="2" opacity=".55"/>
+        <line x1="171" y1="256" x2="183" y2="244" stroke="#00e5a0" stroke-width="2" opacity=".55"/>
+        <line x1="207" y1="220" x2="219" y2="208" stroke="#00e5a0" stroke-width="2" opacity=".55"/>
+        <circle cx="195" cy="232" r="44" fill="none" stroke="#1a1a1a" stroke-width="1" stroke-dasharray="6 4"/>
+      </g>
+
+      <!-- ── LOWER BODY CHASSIS (with wheel arch cutouts) ── -->
+      <path class="cp cp-chassis"
+        d="M 95,218 L 148,218 A 47 47 0 0 1 242,218 L 658,218 A 47 47 0 0 1 752,218 L 832,220 Q 848,228 848,244 L 848,268 L 52,268 L 52,248 Q 56,228 80,222 Z"
+        fill="#0f0f0f" stroke="#1c1c1c" stroke-width="1.2"/>
+
+      <!-- ── FRONT FENDER + HOOD AREA ── -->
+      <path class="cp cp-hood"
+        d="M 80,222 Q 118,208 165,200 Q 210,194 258,188 L 265,196 Q 220,202 175,210 Q 130,216 96,228 Z"
+        fill="#131313" stroke="#1e1e1e" stroke-width="1.2"/>
+
+      <!-- ── REAR FENDER + TRUNK AREA ── -->
+      <path class="cp cp-trunk"
+        d="M 636,180 Q 688,196 752,214 L 832,220 L 832,214 L 748,206 Q 690,190 638,174 Z"
+        fill="#131313" stroke="#1e1e1e" stroke-width="1.2"/>
+
+      <!-- ── CABIN GREENHOUSE (structural frame) ── -->
+      <path class="cp cp-cabin"
+        d="M 258,188 Q 302,136 348,108 L 450,86 Q 515,82 560,96 L 618,134 L 636,180 Z"
+        fill="#0c0c0c" stroke="#1d1d1d" stroke-width="1.4"/>
+
+      <!-- ── WINDSHIELD GLASS ── -->
+      <path class="cp cp-windshield"
+        d="M 258,188 Q 302,136 348,108 L 410,108 L 362,188 Z"
+        fill="rgba(0,55,95,0.82)" stroke="#00e5a0" stroke-width="0.9" opacity=".92"/>
+
+      <!-- ── SIDE WINDOWS ── -->
+      <path class="cp cp-windows"
+        d="M 362,188 L 410,108 L 560,96 L 618,134 L 600,188 Z"
+        fill="rgba(0,62,105,0.75)" stroke="#00e5a0" stroke-width="0.9" opacity=".88"/>
+
+      <!-- ── REAR GLASS (fastback) ── -->
+      <path class="cp cp-rearglass"
+        d="M 600,188 L 618,134 L 636,158 L 636,180 Z"
+        fill="rgba(0,52,90,0.72)" stroke="#00e5a0" stroke-width="0.9" opacity=".82"/>
+
+      <!-- ── FRONT BUMPER ── -->
+      <path class="cp cp-bumper-f"
+        d="M 52,256 L 52,238 Q 56,224 80,220 L 95,218 L 95,224 Q 76,228 70,240 L 68,258 Z"
+        fill="#0e0e0e" stroke="#1d1d1d" stroke-width="1"/>
+      <path class="cp cp-bumper-f"
+        d="M 54,268 L 54,258 Q 62,248 82,244 L 108,240 L 108,244 Q 85,248 74,256 L 68,266 Z"
+        fill="#0d0d0d" stroke="#1c1c1c" stroke-width="1"/>
+
+      <!-- ── REAR BUMPER / DIFFUSER ── -->
+      <path class="cp cp-bumper-r"
+        d="M 848,244 L 848,268 L 824,268 L 824,258 Q 832,250 840,246 Z"
+        fill="#0e0e0e" stroke="#1d1d1d" stroke-width="1"/>
+      <path class="cp cp-bumper-r"
+        d="M 828,268 L 828,260 Q 834,252 842,250 L 848,250 L 848,256 Q 840,258 834,264 L 832,268 Z"
+        fill="#0d0d0d"/>
+
+      <!-- ── SIDE MIRROR ── -->
+      <path class="cp cp-mirror"
+        d="M 246,196 L 236,192 L 240,182 L 252,186 Z"
+        fill="#111" stroke="#1c1c1c" stroke-width="1"/>
+      <rect class="cp cp-mirror" x="237" y="183" width="14" height="9" rx="2" fill="#0e0e0e" stroke="#1c1c1c" stroke-width="1"/>
+
+      <!-- ── SPOILER ── -->
+      <path class="cp cp-spoiler"
+        d="M 718,170 L 782,190 L 782,196 L 716,178 Z"
+        fill="#0d0d0d" stroke="#1c1c1c" stroke-width="1"/>
+
+      <!-- ── DOOR LINES (detail) ── -->
+      <line class="cp cp-doorline" x1="432" y1="108" x2="440" y2="188" stroke="#1e1e1e" stroke-width="2.5"/>
+
+      <!-- ── HEADLIGHTS (LED strip) ── -->
+      <path class="cp cp-headlight"
+        d="M 56,238 Q 64,226 82,220 L 112,215"
+        fill="none" stroke="#00e5a0" stroke-width="3.5" stroke-linecap="round" filter="url(#glow)" opacity=".95"/>
+      <path class="cp cp-headlight"
+        d="M 58,248 Q 66,238 88,232 L 118,228"
+        fill="none" stroke="#00e5a0" stroke-width="1.8" stroke-linecap="round" filter="url(#glow)" opacity=".45"/>
+
+      <!-- ── TAILLIGHTS (full-width LED strip) ── -->
+      <line class="cp cp-taillight" x1="848" y1="218" x2="848" y2="260" stroke="#00e5a0" stroke-width="5" stroke-linecap="round" filter="url(#glow3)" opacity=".95"/>
+      <line class="cp cp-taillight" x1="844" y1="220" x2="844" y2="258" stroke="#00e5a0" stroke-width="2" stroke-linecap="round" filter="url(#glow)" opacity=".4"/>
+
+      <!-- ── SIDE SILL ACCENT LINE ── -->
+      <line class="cp cp-sill" x1="96" y1="260" x2="820" y2="260" stroke="#00e5a0" stroke-width="2" stroke-linecap="round" filter="url(#glow)" opacity=".72"/>
+
+      <!-- ── XIAOMI BADGE ── -->
+      <text class="cp cp-badge" x="450" y="174" font-family="Orbitron,sans-serif" font-size="10" fill="#252525" letter-spacing="5" text-anchor="middle">XIAOMI SU7</text>
+
+    </svg>
+
+    <div id="asm-wrap">
+      <span class="asm-hint" id="asmHint">▲ SCROLL TO ASSEMBLE THE SU7</span>
+      <span class="asm-done" id="asmDone">SU7 ASSEMBLED — ORDER YOURS TODAY</span>
+      <div id="asm-bar-wrap"><div id="asm-bar"></div></div>
+    </div>
+
     <div class="hero-ctas">
-      <a href="#cars" class="btn-primary">Explore All Cars</a>
-      <a href="#order" class="btn-outline">Custom Order SU7</a>
+      <a href="#cars" class="btn-p">Explore All Cars</a>
+      <a href="#order" class="btn-o">Custom Order SU7</a>
     </div>
   </div>
-  <div class="assembly-label" id="asmLabel">▲ SCROLL TO ASSEMBLE THE SU7</div>
-  <div class="hero-scroll"><div class="scroll-line"></div><span>Scroll</span></div>
 </section>
 
 <!-- BRANDS -->
-<section id="brands">
+<section id="brands" class="sec">
   <div class="brands-inner">
-    <div class="brands-label">Brands We Carry</div>
-    <div class="brands-grid">
-      <div class="brand-item active" onclick="filterCars('xiaomi')">
-        <div class="brand-name">XIAOMI</div>
-        <div class="brand-tagline">SU7 · YU7 · Ultra</div>
-      </div>
-      <div class="brand-item" onclick="filterCars('byd')">
-        <div class="brand-name">BYD</div>
-        <div class="brand-tagline">Seal · Atto 3 · Han · Dolphin</div>
-      </div>
-      <div class="brand-item" onclick="filterCars('chery')">
-        <div class="brand-name">CHERY</div>
-        <div class="brand-tagline">I-CAR · Tiggo</div>
-      </div>
-      <div class="brand-item soon">
-        <div class="brand-name">TESLA</div>
-        <div class="brand-tagline">Coming Soon</div>
-      </div>
-      <div class="brand-item soon">
-        <div class="brand-name">MORE</div>
-        <div class="brand-tagline">Expanding 2025</div>
-      </div>
+    <div class="brands-lbl">Brands We Carry</div>
+    <div class="brands-row">
+      <div class="brand-btn active" onclick="filterCars('xiaomi',this)"><div class="bn">XIAOMI</div><div class="bs">SU7 · YU7 · Ultra</div></div>
+      <div class="brand-btn" onclick="filterCars('byd',this)"><div class="bn">BYD</div><div class="bs">Seal · Atto 3 · Han · Dolphin</div></div>
+      <div class="brand-btn" onclick="filterCars('chery',this)"><div class="bn">CHERY</div><div class="bs">I-CAR · Tiggo EV</div></div>
+      <div class="brand-btn soon"><div class="bn">TESLA</div><div class="bs">Coming Soon</div></div>
+      <div class="brand-btn soon"><div class="bn">MORE</div><div class="bs">Expanding 2025</div></div>
     </div>
   </div>
 </section>
 
 <!-- XIAOMI SPOTLIGHT -->
-<section id="xiaomi-spot">
+<section id="spot" class="sec">
   <div class="spot-inner">
-    <div style="text-align:center;margin-bottom:3.5rem">
-      <div class="s-label reveal">Featured Brand</div>
-      <h2 class="s-title reveal">Xiaomi <span class="ac">SU7</span></h2>
-      <p class="s-body reveal" style="max-width:55ch;margin:0 auto">The car that shocked the world. Supercar performance, tech-first design, and seamless integration with the Xiaomi ecosystem — now available to order in Egypt.</p>
+    <div class="spot-top">
+      <div class="sl rev">Featured</div>
+      <h2 class="st rev">Xiaomi <span class="ac">SU7</span></h2>
+      <p class="sb rev" style="margin:0 auto">The car that shocked the world. Supercar performance, tech-first design — now available to order in Egypt through Electra.</p>
     </div>
     <div class="spot-grid">
-      <div class="spot-info reveal">
+      <div class="rev">
         <div class="model-tabs">
-          <button class="model-tab active" onclick="switchModel('SU7',this)">SU7 Sedan</button>
-          <button class="model-tab" onclick="switchModel('YU7',this)">YU7 SUV</button>
-          <button class="model-tab" onclick="switchModel('SU7 Ultra',this)">SU7 Ultra</button>
+          <button class="mtab active" onclick="switchMod('SU7',this)">SU7</button>
+          <button class="mtab" onclick="switchMod('SU7 Ultra',this)">SU7 Ultra</button>
+          <button class="mtab" onclick="switchMod('YU7',this)">YU7 SUV</button>
         </div>
-        <div id="model-desc">
-          <p class="s-body">The SU7 redefines what a performance sedan can be. With a 0–100 km/h time of just 2.78 seconds and a range of up to 800 km, it combines engineering excellence with the Xiaomi tech ecosystem you already love.</p>
+        <p class="sb" id="mod-desc">The SU7 redefines performance sedans. 0–100 km/h in 2.78 s, up to 800 km range, and full Xiaomi ecosystem integration — all in one strikingly designed package.</p>
+        <div class="stat-row">
+          <div class="sbox"><div class="sv" id="ms">2.78<span class="su2">s</span></div><div class="sl2">0-100 km/h</div></div>
+          <div class="sbox"><div class="sv" id="mr">800<span class="su2">km</span></div><div class="sl2">Max Range</div></div>
+          <div class="sbox"><div class="sv" id="mp">673<span class="su2">hp</span></div><div class="sl2">Power</div></div>
+          <div class="sbox"><div class="sv" id="mc">1,100,000<span class="su2" style="font-size:.55rem"> EGP</span></div><div class="sl2">From</div></div>
         </div>
-        <div class="spot-stats">
-          <div class="stat-box reveal"><div class="stat-val" id="m-speed">2.78<span class="stat-unit">s</span></div><div class="stat-lbl">0-100 km/h</div></div>
-          <div class="stat-box reveal"><div class="stat-val" id="m-range">800<span class="stat-unit">km</span></div><div class="stat-lbl">Max Range</div></div>
-          <div class="stat-box reveal"><div class="stat-val" id="m-power">673<span class="stat-unit">hp</span></div><div class="stat-lbl">Power Output</div></div>
-          <div class="stat-box reveal"><div class="stat-val" id="m-price">1,100,000<span class="stat-unit" style="font-size:.6rem"> EGP</span></div><div class="stat-lbl">Starting Price</div></div>
-        </div>
-        <div style="margin-top:2rem;display:flex;gap:.8rem;flex-wrap:wrap">
-          <a href="#order" class="btn-primary" onclick="selectOrderModel('SU7')">Order Your SU7 →</a>
-          <a href="#cars" class="btn-outline">View All Xiaomi</a>
+        <div style="display:flex;gap:.8rem;margin-top:1.8rem;flex-wrap:wrap">
+          <a href="#order" class="btn-p" onclick="selOrd('SU7')">Order Now →</a>
+          <a href="#cars" class="btn-o">See All Xiaomi</a>
         </div>
       </div>
-      <div class="spot-visual reveal">
-        <!-- Xiaomi SU7 SVG representation -->
-        <svg class="car-svg" viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg" id="su7-svg">
-          <defs>
-            <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#1a1a1a"/>
-              <stop offset="100%" style="stop-color:#0a0a0a"/>
-            </linearGradient>
-            <filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-            <filter id="glow2"><feGaussianBlur stdDeviation="6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-          </defs>
-          <!-- Shadow -->
-          <ellipse cx="300" cy="255" rx="200" ry="12" fill="rgba(0,229,160,0.08)"/>
-          <!-- Body main -->
-          <path d="M60,200 L60,170 Q65,148 90,140 L160,118 Q200,95 240,88 L340,86 Q390,88 430,102 L510,138 Q535,148 540,170 L540,200 Z" fill="url(#bodyGrad)" stroke="#1e1e1e" stroke-width="1"/>
-          <!-- Roofline fastback -->
-          <path d="M160,118 Q200,95 240,88 L340,86 Q390,88 430,102 L430,102 Q400,82 360,72 L240,72 Q200,76 170,96 Z" fill="#111"/>
+      <div class="car-img-box rev">
+        <!-- SU7 SVG illustration -->
+        <svg viewBox="0 0 580 220" xmlns="http://www.w3.org/2000/svg" style="width:100%">
+          <defs><filter id="cg"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+          <ellipse cx="290" cy="198" rx="218" ry="8" fill="rgba(0,229,160,0.07)" filter="url(#cg)"/>
+          <!-- Body -->
+          <path d="M48,172 L48,152 Q54,138 72,134 L108,124 Q140,112 170,106 L186,136 L388,136 L410,108 L446,118 Q488,130 516,148 L536,162 L536,172 Z" fill="#111" stroke="#1e1e1e" stroke-width="1.2"/>
+          <!-- Roof -->
+          <path d="M170,106 Q202,76 238,64 L288,56 Q336,54 368,68 L410,108 Z" fill="#0d0d0d" stroke="#1e1e1e" stroke-width="1"/>
           <!-- Windshield -->
-          <path d="M200,88 L240,70 L330,70 L360,88" fill="rgba(0,60,80,0.7)" stroke="#00e5a0" stroke-width=".8" opacity=".7"/>
-          <!-- Rear window -->
-          <path d="M360,88 L390,96 L420,116 L390,104 Z" fill="rgba(0,60,80,0.5)" stroke="#00e5a0" stroke-width=".5" opacity=".5"/>
-          <!-- Door lines -->
-          <line x1="260" y1="90" x2="265" y2="195" stroke="#222" stroke-width="2"/>
-          <line x1="370" y1="88" x2="370" y2="192" stroke="#222" stroke-width="2"/>
-          <!-- Front LED strip -->
-          <path d="M62,162 L62,155 Q64,148 72,146 L100,140" stroke="#00e5a0" stroke-width="2" fill="none" filter="url(#glow)" opacity=".9"/>
-          <!-- Rear LED strip -->
-          <line x1="520" y1="155" x2="540" y2="158" stroke="#00e5a0" stroke-width="2.5" filter="url(#glow2)"/>
-          <line x1="515" y1="162" x2="540" y2="164" stroke="#00e5a0" stroke-width="1.5" filter="url(#glow)" opacity=".6"/>
-          <!-- Front bumper -->
-          <path d="M62,198 L62,178 Q65,170 75,168 L105,164" fill="none" stroke="#2a2a2a" stroke-width="2"/>
+          <path d="M170,106 Q202,76 238,64 L268,64 L228,106 Z" fill="rgba(0,55,100,0.8)" stroke="#00e5a0" stroke-width=".8" opacity=".9"/>
+          <!-- Side glass -->
+          <path d="M228,106 L268,64 L368,68 L388,106 Z" fill="rgba(0,60,105,0.72)" stroke="#00e5a0" stroke-width=".8" opacity=".88"/>
+          <!-- Rear glass -->
+          <path d="M388,106 L410,82 L410,108 Z" fill="rgba(0,50,90,0.7)" stroke="#00e5a0" stroke-width=".7"/>
+          <!-- Front LED -->
+          <path d="M48,156 Q52,144 68,138 L88,134" fill="none" stroke="#00e5a0" stroke-width="3" stroke-linecap="round" filter="url(#cg)"/>
+          <!-- Rear LED -->
+          <line x1="536" y1="142" x2="536" y2="168" stroke="#00e5a0" stroke-width="4" stroke-linecap="round" filter="url(#cg)"/>
+          <!-- Sill -->
+          <line x1="72" y1="168" x2="516" y2="168" stroke="#00e5a0" stroke-width="1.5" filter="url(#cg)" opacity=".7"/>
           <!-- Wheels -->
-          <circle cx="155" cy="210" r="38" fill="#0d0d0d" stroke="#1a1a1a" stroke-width="3"/>
-          <circle cx="155" cy="210" r="28" fill="none" stroke="#252525" stroke-width="8"/>
-          <circle cx="155" cy="210" r="14" fill="#1a1a1a" stroke="#00e5a0" stroke-width="1" filter="url(#glow)"/>
-          <!-- Rim spokes FL -->
-          <line x1="155" y1="182" x2="155" y2="196" stroke="#00e5a0" stroke-width="1.5" opacity=".6"/>
-          <line x1="155" y1="224" x2="155" y2="238" stroke="#00e5a0" stroke-width="1.5" opacity=".6"/>
-          <line x1="127" y1="210" x2="141" y2="210" stroke="#00e5a0" stroke-width="1.5" opacity=".6"/>
-          <line x1="169" y1="210" x2="183" y2="210" stroke="#00e5a0" stroke-width="1.5" opacity=".6"/>
-          <circle cx="445" cy="210" r="38" fill="#0d0d0d" stroke="#1a1a1a" stroke-width="3"/>
-          <circle cx="445" cy="210" r="28" fill="none" stroke="#252525" stroke-width="8"/>
-          <circle cx="445" cy="210" r="14" fill="#1a1a1a" stroke="#00e5a0" stroke-width="1" filter="url(#glow)"/>
-          <line x1="445" y1="182" x2="445" y2="196" stroke="#00e5a0" stroke-width="1.5" opacity=".6"/>
-          <line x1="445" y1="224" x2="445" y2="238" stroke="#00e5a0" stroke-width="1.5" opacity=".6"/>
-          <line x1="417" y1="210" x2="431" y2="210" stroke="#00e5a0" stroke-width="1.5" opacity=".6"/>
-          <line x1="459" y1="210" x2="473" y2="210" stroke="#00e5a0" stroke-width="1.5" opacity=".6"/>
-          <!-- Side sill accent -->
-          <line x1="105" y1="198" x2="395" y2="198" stroke="#00e5a0" stroke-width="1.5" filter="url(#glow)" opacity=".7"/>
-          <!-- XIAOMI badge -->
-          <text x="270" y="175" font-family="Orbitron,sans-serif" font-size="11" fill="#333" letter-spacing="4" text-anchor="middle">XIAOMI</text>
-          <!-- Ground glow -->
-          <ellipse cx="300" cy="252" rx="180" ry="6" fill="rgba(0,229,160,0.06)" filter="url(#glow2)"/>
+          <circle cx="128" cy="178" r="30" fill="#080808" stroke="#181818" stroke-width="2.5"/>
+          <circle cx="128" cy="178" r="20" fill="none" stroke="#141414" stroke-width="7"/>
+          <circle cx="128" cy="178" r="8" fill="#131313" stroke="#00e5a0" stroke-width="1" filter="url(#cg)"/>
+          <circle cx="452" cy="178" r="30" fill="#080808" stroke="#181818" stroke-width="2.5"/>
+          <circle cx="452" cy="178" r="20" fill="none" stroke="#141414" stroke-width="7"/>
+          <circle cx="452" cy="178" r="8" fill="#131313" stroke="#00e5a0" stroke-width="1" filter="url(#cg)"/>
+          <text x="290" y="120" font-family="Orbitron,sans-serif" font-size="8" fill="#252525" letter-spacing="4" text-anchor="middle">XIAOMI SU7</text>
         </svg>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ALL CARS GRID -->
-<section id="cars">
+<!-- ALL CARS -->
+<section id="cars" class="sec">
   <div class="cars-inner">
-    <div class="cars-header">
-      <div>
-        <div class="s-label reveal">Our Inventory</div>
-        <h2 class="s-title reveal">All <span class="ac">Models</span></h2>
-      </div>
-      <div class="filter-tabs" id="filterTabs">
-        <button class="ftab active" onclick="filterCars('all',this)">All</button>
-        <button class="ftab" onclick="filterCars('xiaomi',this)">Xiaomi</button>
-        <button class="ftab" onclick="filterCars('byd',this)">BYD</button>
-        <button class="ftab" onclick="filterCars('chery',this)">Chery</button>
+    <div class="cars-head">
+      <div><div class="sl rev">Inventory</div><h2 class="st rev">All <span class="ac">Models</span></h2></div>
+      <div class="ftabs" id="ftabs">
+        <button class="ft active" onclick="filterCars('all',this)">All</button>
+        <button class="ft" onclick="filterCars('xiaomi',this)">Xiaomi</button>
+        <button class="ft" onclick="filterCars('byd',this)">BYD</button>
+        <button class="ft" onclick="filterCars('chery',this)">Chery</button>
       </div>
     </div>
-    <div class="cars-grid" id="carsGrid"></div>
+    <div class="cgrid" id="cgrid"></div>
   </div>
 </section>
 
 <!-- CUSTOM ORDER -->
-<section id="order">
-  <div class="order-inner">
+<section id="order" class="sec">
+  <div class="ord-inner">
     <div>
-      <div class="s-label reveal">03 — Custom Order</div>
-      <h2 class="s-title reveal">Build Your<br><span class="ac">Xiaomi</span></h2>
-      <p class="s-body reveal" style="margin-bottom:2rem">Configure your exact SU7 or YU7 — select specs, color and extras. We handle the import, customs clearance and delivery to your door anywhere in Egypt.</p>
-      <div class="c-details" style="margin-top:1rem">
-        <div class="c-item reveal"><div class="c-icon">01</div><div class="c-text"><h4>Reserve</h4><p>Place order with 50,000 EGP deposit</p></div></div>
-        <div class="c-item reveal"><div class="c-icon">02</div><div class="c-text"><h4>Import</h4><p>We handle factory order, shipping &amp; customs</p></div></div>
-        <div class="c-item reveal"><div class="c-icon">03</div><div class="c-text"><h4>Deliver</h4><p>Your car arrives in 3–5 months, fully ready</p></div></div>
+      <div class="sl rev">Custom Order</div>
+      <h2 class="st rev">Build Your<br><span class="ac">Xiaomi</span></h2>
+      <p class="sb rev" style="margin-bottom:2rem">Configure your exact SU7 or YU7. We handle factory order, shipping and customs clearance — delivered to your door anywhere in Egypt.</p>
+      <div style="display:flex;flex-direction:column;gap:1.2rem;margin-top:1rem">
+        <div class="ct-item rev"><div class="ct-ico">01</div><div class="ct-txt"><h4>Reserve</h4><p>50,000 EGP fully refundable deposit</p></div></div>
+        <div class="ct-item rev"><div class="ct-ico">02</div><div class="ct-txt"><h4>Import</h4><p>Factory order, shipping &amp; customs handled</p></div></div>
+        <div class="ct-item rev"><div class="ct-ico">03</div><div class="ct-txt"><h4>Deliver</h4><p>Your car arrives in 3–5 months, ready to drive</p></div></div>
       </div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:1.5rem">
-      <!-- Options -->
-      <div class="order-options reveal">
-        <div class="o-sec">
-          <div class="o-sec-title">Select Model</div>
-          <div class="o-toggle">
-            <button class="o-tbtn active" id="ob-SU7" onclick="oModel('SU7',this)"><span class="o-tname">SU7</span><span class="o-tsub">Sedan · From 1,100,000 EGP</span></button>
-            <button class="o-tbtn" id="ob-YU7" onclick="oModel('YU7',this)"><span class="o-tname">YU7</span><span class="o-tsub">SUV · From 1,050,000 EGP</span></button>
+    <div>
+      <div class="ord-opts rev">
+        <div class="osec">
+          <div class="osect">Select Model</div>
+          <div class="otog">
+            <button class="otbtn active" id="ob-SU7" onclick="oMod('SU7',this)"><span class="otn">SU7</span><span class="ots">Sedan · From 1,100,000 EGP</span></button>
+            <button class="otbtn" id="ob-YU7" onclick="oMod('YU7',this)"><span class="otn">YU7</span><span class="ots">SUV · From 1,050,000 EGP</span></button>
           </div>
         </div>
-        <div class="o-sec">
-          <div class="o-sec-title">Trim Level</div>
-          <div class="o-grid3">
-            <button class="o-opt" onclick="oOpt('trim','Standard',this,0)"><span class="o-oname">Standard</span><span class="o-oprice">Included</span></button>
-            <button class="o-opt active" onclick="oOpt('trim','Pro',this,250000)"><span class="o-oname">Pro</span><span class="o-oprice">+250,000</span></button>
-            <button class="o-opt" onclick="oOpt('trim','Ultra',this,700000)"><span class="o-oname">Ultra</span><span class="o-oprice">+700,000</span></button>
+        <div class="osec">
+          <div class="osect">Trim Level</div>
+          <div class="og3">
+            <button class="oopt" onclick="oOpt('trim','Standard',this,0)"><span class="oon">Standard</span><span class="oop">Included</span></button>
+            <button class="oopt active" onclick="oOpt('trim','Pro',this,250000)"><span class="oon">Pro</span><span class="oop">+250,000</span></button>
+            <button class="oopt" onclick="oOpt('trim','Ultra',this,700000)"><span class="oon">Ultra</span><span class="oop">+700,000</span></button>
           </div>
         </div>
-        <div class="o-sec">
-          <div class="o-sec-title">Exterior Color — <span id="ocname" style="color:#fff">Midnight Black</span></div>
-          <div class="o-colors">
-            <button class="o-cbtn active" title="Midnight Black" style="background:#0d0d0d;border-color:#333" onclick="oColor('Midnight Black','#0d0d0d',this,0)"></button>
-            <button class="o-cbtn" title="Arctic White" style="background:#f0f0f0" onclick="oColor('Arctic White','#f0f0f0',this,0)"></button>
-            <button class="o-cbtn" title="Aqua Blue" style="background:#0066aa" onclick="oColor('Aqua Blue','#0066aa',this,45000)"></button>
-            <button class="o-cbtn" title="Aura Silver" style="background:linear-gradient(135deg,#c0c0c0,#888)" onclick="oColor('Aura Silver','#a0a0a0',this,45000)"></button>
-            <button class="o-cbtn" title="Electra Green" style="background:#00e5a0;box-shadow:0 0 8px #00e5a0" onclick="oColor('Electra Green','#00e5a0',this,65000)"></button>
-            <button class="o-cbtn" title="Crimson Red" style="background:#8b0000" onclick="oColor('Crimson Red','#8b0000',this,45000)"></button>
+        <div class="osec">
+          <div class="osect">Color — <span id="ocn" style="color:#fff">Midnight Black</span></div>
+          <div class="ocolors">
+            <button class="ocb active" title="Midnight Black" style="background:#0d0d0d;border-color:#333" onclick="oCol('Midnight Black','#0d0d0d',this,0)"></button>
+            <button class="ocb" title="Arctic White" style="background:#f0f0f0" onclick="oCol('Arctic White','#f0f0f0',this,0)"></button>
+            <button class="ocb" title="Aqua Blue" style="background:#0055aa" onclick="oCol('Aqua Blue','#0055aa',this,45000)"></button>
+            <button class="ocb" title="Aura Silver" style="background:linear-gradient(135deg,#c0c0c0,#888)" onclick="oCol('Aura Silver','#a0a0a0',this,45000)"></button>
+            <button class="ocb" title="Electra Green" style="background:#00e5a0;box-shadow:0 0 8px #00e5a0" onclick="oCol('Electra Green','#00e5a0',this,65000)"></button>
+            <button class="ocb" title="Crimson Red" style="background:#8b0000" onclick="oCol('Crimson Red','#8b0000',this,45000)"></button>
           </div>
         </div>
-        <div class="o-sec">
-          <div class="o-sec-title">Battery Range</div>
-          <div class="o-grid3">
-            <button class="o-opt" onclick="oOpt('battery','620 km',this,0)"><span class="o-oname">620 km</span><span class="o-oprice">Standard</span></button>
-            <button class="o-opt active" onclick="oOpt('battery','730 km',this,170000)"><span class="o-oname">730 km</span><span class="o-oprice">+170,000</span></button>
-            <button class="o-opt" onclick="oOpt('battery','800+ km',this,380000)"><span class="o-oname">800+ km</span><span class="o-oprice">+380,000</span></button>
+        <div class="osec">
+          <div class="osect">Battery Range</div>
+          <div class="og3">
+            <button class="oopt" onclick="oOpt('batt','620 km',this,0)"><span class="oon">620 km</span><span class="oop">Standard</span></button>
+            <button class="oopt active" onclick="oOpt('batt','730 km',this,170000)"><span class="oon">730 km</span><span class="oop">+170,000</span></button>
+            <button class="oopt" onclick="oOpt('batt','800+ km',this,380000)"><span class="oon">800+ km</span><span class="oop">+380,000</span></button>
           </div>
         </div>
-        <div class="o-sec">
-          <div class="o-sec-title">Wheels</div>
-          <div class="o-grid3">
-            <button class="o-opt active" onclick="oOpt('wheels','19&quot; Standard',this,0)"><span class="o-oname">19" Aero</span><span class="o-oprice">Standard</span></button>
-            <button class="o-opt" onclick="oOpt('wheels','20&quot; Sport',this,65000)"><span class="o-oname">20" Sport</span><span class="o-oprice">+65,000</span></button>
-            <button class="o-opt" onclick="oOpt('wheels','21&quot; Perf.',this,150000)"><span class="o-oname">21" Perf.</span><span class="o-oprice">+150,000</span></button>
+        <div class="osec">
+          <div class="osect">Wheels</div>
+          <div class="og3">
+            <button class="oopt active" onclick="oOpt('whl','19&quot; Aero',this,0)"><span class="oon">19" Aero</span><span class="oop">Standard</span></button>
+            <button class="oopt" onclick="oOpt('whl','20&quot; Sport',this,65000)"><span class="oon">20" Sport</span><span class="oop">+65,000</span></button>
+            <button class="oopt" onclick="oOpt('whl','21&quot; Perf.',this,150000)"><span class="oon">21" Perf.</span><span class="oop">+150,000</span></button>
           </div>
         </div>
       </div>
-      <!-- Summary -->
-      <div class="order-summary reveal">
-        <div class="sum-title">YOUR BUILD SUMMARY</div>
-        <div class="sum-model" id="sum-model">SU7</div>
-        <div class="sum-sub" id="sum-sub">Pro Trim · Midnight Black</div>
+      <div class="ord-sum rev">
+        <div class="sumtit">YOUR BUILD</div>
+        <div class="summod" id="smod">Xiaomi SU7</div>
+        <div class="sumsub" id="ssub">Pro · Midnight Black</div>
         <div class="nline"></div>
-        <div class="sum-items" id="sum-items"></div>
-        <div class="sum-total">
-          <span class="sum-total-label">TOTAL PRICE</span>
-          <span class="sum-total-price" id="sum-price">1,350,000 EGP</span>
-        </div>
-        <button class="btn-primary" style="width:100%;margin-bottom:.7rem" onclick="submitOrder()">Reserve Now — 50,000 EGP Deposit</button>
-        <a href="https://wa.me/201000000000?text=I want to order a Xiaomi SU7" target="_blank" class="wa-big">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        <div class="sumitems" id="sitems"></div>
+        <div class="stot"><span class="stlbl">TOTAL</span><span class="stprice" id="sprice">1,350,000 EGP</span></div>
+        <button class="btn-p" style="width:100%;margin-bottom:.6rem" onclick="subOrd()">Reserve — 50,000 EGP Deposit</button>
+        <a href="https://wa.me/201000000000?text=I want to order a Xiaomi" target="_blank" class="wa-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           Enquire via WhatsApp
         </a>
-        <p class="sum-note">Deposit fully refundable within 14 days. Balance due on delivery. Prices include basic import duties — exact customs fees may vary.</p>
+        <p style="font-size:.66rem;color:var(--gray2);line-height:1.6;margin-top:.9rem">Deposit refundable within 14 days. Balance on delivery. Prices indicative — final cost confirmed on order.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- TRUST -->
-<section id="trust">
-  <div class="trust-inner">
-    <div style="text-align:center">
-      <div class="s-label reveal">Why Choose Electra</div>
-      <h2 class="s-title reveal">Egypt's Most Trusted <span class="ac">EV Partner</span></h2>
-    </div>
-    <div class="trust-grid">
-      <div class="trust-card reveal"><span class="trust-icon">🔋</span><div class="trust-name">Authorized Import</div><div class="trust-desc">Official import channels with full documentation, factory warranty and genuine spare parts supply chain.</div></div>
-      <div class="trust-card reveal"><span class="trust-icon">🛡️</span><div class="trust-name">Full Warranty</div><div class="trust-desc">All vehicles come with manufacturer warranty coverage and our own 1-year Electra service guarantee.</div></div>
-      <div class="trust-card reveal"><span class="trust-icon">⚡</span><div class="trust-name">Home Charging Setup</div><div class="trust-desc">We supply and install your home charging unit anywhere in Egypt as part of your purchase package.</div></div>
-      <div class="trust-card reveal"><span class="trust-icon">🔧</span><div class="trust-name">Certified Service</div><div class="trust-desc">Our trained EV technicians handle all maintenance and repairs at our Cairo and Alexandria centres.</div></div>
+<section id="trust" class="sec">
+  <div class="tr-inner">
+    <div style="text-align:center"><div class="sl rev">Why Electra</div><h2 class="st rev">Egypt's Most Trusted <span class="ac">EV Partner</span></h2></div>
+    <div class="tgrid">
+      <div class="tcard rev"><span class="tico">🔋</span><div class="tname">Authorized Import</div><div class="tdesc">Official channels, full documentation, factory warranty and genuine parts supply.</div></div>
+      <div class="tcard rev"><span class="tico">🛡️</span><div class="tname">Full Warranty</div><div class="tdesc">Manufacturer warranty plus our own 1-year Electra service guarantee on every car.</div></div>
+      <div class="tcard rev"><span class="tico">⚡</span><div class="tname">Home Charging</div><div class="tdesc">We supply and install your home charger anywhere in Egypt, included with purchase.</div></div>
+      <div class="tcard rev"><span class="tico">🔧</span><div class="tname">Certified Service</div><div class="tdesc">EV-trained technicians at our Cairo and Alexandria service centres.</div></div>
     </div>
   </div>
 </section>
 
 <!-- CONTACT -->
-<section id="contact">
-  <div class="contact-inner">
-    <div class="c-info">
-      <div class="s-label reveal">Get in Touch</div>
-      <h2 class="s-title reveal">Visit Our<br><span class="ac">Showrooms</span></h2>
-      <p class="s-body reveal">Our EV specialists are ready to help you choose the right car, arrange a test ride, or process your custom import order.</p>
-      <div class="c-details" style="margin-top:2.5rem">
-        <div class="c-item reveal"><div class="c-icon">📍</div><div class="c-text"><h4>Cairo Showroom</h4><p>New Cairo, 5th Settlement<br>90th St. Auto Mall, Block 12</p></div></div>
-        <div class="c-item reveal"><div class="c-icon">📍</div><div class="c-text"><h4>Alexandria Showroom</h4><p>Smouha, Victor Emanuel St.<br>Next to City Centre</p></div></div>
-        <div class="c-item reveal"><div class="c-icon">📞</div><div class="c-text"><h4>Phone / WhatsApp</h4><p><a href="tel:+201000000000">+20 100 000 0000</a><br>Sat–Thu, 10:00–20:00</p></div></div>
-        <div class="c-item reveal"><div class="c-icon">✉️</div><div class="c-text"><h4>Email</h4><p><a href="mailto:info@electraeg.com">info@electraeg.com</a></p></div></div>
+<section id="contact" class="sec">
+  <div class="ct-inner">
+    <div>
+      <div class="sl rev">Get in Touch</div>
+      <h2 class="st rev">Visit Our<br><span class="ac">Showrooms</span></h2>
+      <p class="sb rev">Our specialists help you choose the right car, arrange a test ride, or process your import order.</p>
+      <div class="ct-dets">
+        <div class="ct-item rev"><div class="ct-ico">📍</div><div class="ct-txt"><h4>Cairo</h4><p>New Cairo, 5th Settlement<br>90th St. Auto Mall, Block 12</p></div></div>
+        <div class="ct-item rev"><div class="ct-ico">📍</div><div class="ct-txt"><h4>Alexandria</h4><p>Smouha, Victor Emanuel St.<br>Near City Centre Alex</p></div></div>
+        <div class="ct-item rev"><div class="ct-ico">📞</div><div class="ct-txt"><h4>Phone / WhatsApp</h4><p><a href="tel:+201000000000">+20 100 000 0000</a> · Sat–Thu 10–20</p></div></div>
+        <div class="ct-item rev"><div class="ct-ico">✉️</div><div class="ct-txt"><h4>Email</h4><p><a href="mailto:info@electraeg.com">info@electraeg.com</a></p></div></div>
       </div>
     </div>
-    <div class="c-form reveal">
-      <form onsubmit="submitForm(event)">
+    <div class="cform rev">
+      <form onsubmit="subForm(event)">
         <div class="frow">
           <div class="fg"><label class="fl">First Name</label><input type="text" class="fi" placeholder="Ahmed" required></div>
           <div class="fg"><label class="fl">Last Name</label><input type="text" class="fi" placeholder="Hassan" required></div>
         </div>
         <div class="fg"><label class="fl">Phone / WhatsApp</label><input type="tel" class="fi" placeholder="+20 100 000 0000" required></div>
         <div class="fg"><label class="fl">Email</label><input type="email" class="fi" placeholder="ahmed@email.com"></div>
-        <div class="fg">
-          <label class="fl">I'm Interested In</label>
-          <select class="fsel">
-            <option>Xiaomi SU7 — Custom Order</option>
-            <option>Xiaomi YU7 — Custom Order</option>
-            <option>BYD Seal</option>
-            <option>BYD Atto 3</option>
-            <option>BYD Han EV</option>
-            <option>Chery I-CAR</option>
-            <option>Test Drive</option>
-            <option>General Inquiry</option>
-          </select>
+        <div class="fg"><label class="fl">Interested In</label>
+          <select class="fsel"><option>Xiaomi SU7 — Custom Order</option><option>Xiaomi YU7</option><option>BYD Seal</option><option>BYD Atto 3</option><option>Chery I-CAR</option><option>Test Drive</option><option>General Inquiry</option></select>
         </div>
         <div class="fg"><label class="fl">Message</label><textarea class="fta" placeholder="Tell us what you're looking for..."></textarea></div>
-        <button type="submit" class="btn-primary" style="width:100%">Send Message →</button>
+        <button type="submit" class="btn-p" style="width:100%">Send Message →</button>
       </form>
     </div>
   </div>
 </section>
-
 </main>
 
 <footer>
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <svg viewBox="0 0 200 44" height="34" xmlns="http://www.w3.org/2000/svg">
-        <path d="M8,28 L8,34 L46,34 L46,28 Q42,20 38,18 L22,18 Q16,20 10,26 Z" fill="none" stroke="#00e5a0" stroke-width="1.5"/>
-        <path d="M17,18 Q19,12 24,11 L32,11 Q37,12 39,18" fill="none" stroke="#00e5a0" stroke-width="1.4"/>
-        <circle cx="17" cy="34" r="4.5" fill="none" stroke="#00e5a0" stroke-width="1.5"/>
-        <circle cx="37" cy="34" r="4.5" fill="none" stroke="#00e5a0" stroke-width="1.5"/>
-        <path d="M27,12 L24,20 L27,20 L22,30 L34,16 L30,16 Z" fill="#00e5a0" opacity=".8"/>
-        <line x1="56" y1="8" x2="56" y2="38" stroke="#00e5a0" stroke-width=".8" opacity=".4"/>
-        <text x="62" y="26" font-family="Orbitron,sans-serif" font-size="15" font-weight="900" fill="#00e5a0" letter-spacing="1">ELECTRA</text>
-        <text x="63" y="36" font-family="Inter,sans-serif" font-size="5.5" fill="#00e5a0" letter-spacing="3" opacity=".55">VEHICLES OF FUTURE</text>
+  <div class="fi2">
+    <div class="fb">
+      <svg viewBox="0 0 200 44" height="32" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8,28 L8,34 L46,34 L46,28 Q42,20 38,18 L22,18 Q16,20 10,26 Z" fill="none" stroke="#00e5a0" stroke-width="1.5"/><path d="M17,18 Q19,12 24,11 L32,11 Q37,12 39,18" fill="none" stroke="#00e5a0" stroke-width="1.4"/><circle cx="17" cy="34" r="4" fill="none" stroke="#00e5a0" stroke-width="1.5"/><circle cx="37" cy="34" r="4" fill="none" stroke="#00e5a0" stroke-width="1.5"/><path d="M27,12 L24,20 L27,20 L22,30 L34,16 L30,16 Z" fill="#00e5a0" opacity=".8"/><line x1="56" y1="8" x2="56" y2="38" stroke="#00e5a0" stroke-width=".8" opacity=".4"/><text x="62" y="24" font-family="Orbitron,sans-serif" font-size="14" font-weight="900" fill="#00e5a0" letter-spacing="1">ELECTRA</text><text x="63" y="35" font-family="Inter,sans-serif" font-size="5.5" fill="#00e5a0" letter-spacing="3" opacity=".55">VEHICLES OF FUTURE</text>
       </svg>
-      <p>Egypt's premier electric vehicle retailer. Importing and delivering the future of mobility since 2023.</p>
-      <div class="footer-socials">
-        <a href="#" class="footer-social">f</a>
-        <a href="#" class="footer-social">in</a>
-        <a href="#" class="footer-social">ig</a>
-        <a href="https://wa.me/201000000000" class="footer-social" target="_blank">w</a>
-      </div>
+      <p>Egypt's premier electric vehicle retailer. Importing the future of mobility since 2023.</p>
+      <div class="fsoc"><a href="#">f</a><a href="#">ig</a><a href="#">in</a><a href="https://wa.me/201000000000" target="_blank">w</a></div>
     </div>
-    <div class="footer-col">
-      <h4>Brands</h4>
-      <ul>
-        <li><a href="#cars">Xiaomi EV</a></li>
-        <li><a href="#cars">BYD</a></li>
-        <li><a href="#cars">Chery</a></li>
-        <li><a href="#cars">Coming Soon</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Services</h4>
-      <ul>
-        <li><a href="#order">Custom Order</a></li>
-        <li><a href="#trust">Home Charging</a></li>
-        <li><a href="#trust">After-Sales</a></li>
-        <li><a href="#contact">Test Drive</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Company</h4>
-      <ul>
-        <li><a href="#trust">About Electra</a></li>
-        <li><a href="#contact">Showrooms</a></li>
-        <li><a href="#contact">Careers</a></li>
-        <li><a href="https://www.electraeg.com" target="_blank">electraeg.com</a></li>
-      </ul>
-    </div>
+    <div class="fcol"><h4>Brands</h4><ul><li><a href="#cars">Xiaomi EV</a></li><li><a href="#cars">BYD</a></li><li><a href="#cars">Chery</a></li><li><a href="#">Coming Soon</a></li></ul></div>
+    <div class="fcol"><h4>Services</h4><ul><li><a href="#order">Custom Order</a></li><li><a href="#trust">Home Charging</a></li><li><a href="#trust">After-Sales</a></li><li><a href="#contact">Test Drive</a></li></ul></div>
+    <div class="fcol"><h4>Company</h4><ul><li><a href="#trust">About Us</a></li><li><a href="#contact">Showrooms</a></li><li><a href="https://www.electraeg.com" target="_blank">electraeg.com</a></li></ul></div>
   </div>
-  <div class="footer-bottom">
-    <p>© 2025 Electra Egypt — Vehicles of Future. All rights reserved.</p>
-    <p>Cairo · Alexandria · Delivering Across Egypt</p>
-  </div>
+  <div class="fbot"><p>© 2025 Electra Egypt — Vehicles of Future. All rights reserved.</p><p>Cairo · Alexandria · Delivering Across Egypt</p></div>
 </footer>
 
 <script>
-// Cursor
+// ── CURSOR ──
 const cur=document.getElementById('cur'),cur2=document.getElementById('cur2');
 let mx=0,my=0,mx2=0,my2=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
@@ -694,339 +694,309 @@ document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
   if(cur){cur.style.left=mx+'px';cur.style.top=my+'px';}
   if(cur2){cur2.style.left=mx2+'px';cur2.style.top=my2+'px';}
   requestAnimationFrame(ca);})();
-document.querySelectorAll('a,button,.car-card,.brand-item').forEach(el=>{
+document.querySelectorAll('a,button,.ccard,.brand-btn').forEach(el=>{
   el.addEventListener('mouseenter',()=>{if(cur2)cur2.style.transform='translate(-50%,-50%) scale(1.7)'});
   el.addEventListener('mouseleave',()=>{if(cur2)cur2.style.transform='translate(-50%,-50%) scale(1)'});
 });
 
-// Scroll progress
-const prog=document.getElementById('prog');
+// ── SCROLL PROGRESS ──
 window.addEventListener('scroll',()=>{
-  prog.style.width=(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100)+'%';
-  const nav=document.getElementById('navbar');
-  if(nav)nav.classList.toggle('scrolled',window.scrollY>60);
+  document.getElementById('prog').style.width=(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100)+'%';
 });
 
-// Reveal
-const obs=new IntersectionObserver((ents)=>{
+// ── REVEAL ──
+const obs=new IntersectionObserver(ents=>{
   ents.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('vis'),i*70);obs.unobserve(e.target);}});
 },{threshold:.1});
-document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+document.querySelectorAll('.rev').forEach(el=>obs.observe(el));
 
-// Mobile menu
-function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open')}
+// ── MOBILE MENU ──
+function toggleMenu(){document.getElementById('mobMenu').classList.toggle('open')}
 
-// Cars data
-const carsData=[
-  {id:1,brand:'xiaomi',name:'SU7',sub:'Xiaomi · Sedan',price:'1,100,000',img:'https://s1.xiaomiev.com/activity-external-file/web/su7/pictures/su7_black_1.jpg',range:'730',accel:'2.78',power:'299',type:'Sedan',badge:'NEW',egpfull:'1,100,000 EGP',desc:'The flagship performance sedan'},
-  {id:2,brand:'xiaomi',name:'SU7 Ultra',sub:'Xiaomi · Performance Sedan',price:'1,900,000',img:'https://s1.xiaomiev.com/activity-external-file/web/su7/pictures/su7ultra_1.jpg',range:'800',accel:'1.97',power:'673',type:'Performance',badge:'ULTRA',egpfull:'1,900,000 EGP',desc:'Track-ready, street-legal hypercar'},
-  {id:3,brand:'xiaomi',name:'YU7',sub:'Xiaomi · SUV',price:'1,050,000',img:'https://s1.xiaomiev.com/activity-external-file/web/yu7/pictures/yu7_1.jpg',range:'760',accel:'3.23',power:'374',type:'SUV',badge:'2025',egpfull:'1,050,000 EGP',desc:'The intelligent electric SUV'},
-  {id:4,brand:'byd',name:'Seal',sub:'BYD · Sedan',price:'890,000',img:'https://ev-database.org/img/auto/BYD_Seal/BYD_Seal-01@2x.jpg',range:'570',accel:'3.8',power:'390',type:'Sedan',badge:'',egpfull:'890,000 EGP',desc:'Sporty EV with dolphin-inspired design'},
-  {id:5,brand:'byd',name:'Atto 3',sub:'BYD · Compact SUV',price:'680,000',img:'https://ev-database.org/img/auto/BYD_Atto_3/BYD_Atto_3-01@2x.jpg',range:'420',accel:'7.3',power:'150',type:'SUV',badge:'POPULAR',egpfull:'680,000 EGP',desc:'Practical electric SUV for the family'},
-  {id:6,brand:'byd',name:'Han EV',sub:'BYD · Executive Sedan',price:'1,050,000',img:'https://ev-database.org/img/auto/BYD_Han/BYD_Han-01@2x.jpg',range:'521',accel:'3.9',power:'380',type:'Sedan',badge:'',egpfull:'1,050,000 EGP',desc:'Luxury executive electric sedan'},
-  {id:7,brand:'byd',name:'Dolphin',sub:'BYD · Hatchback',price:'550,000',img:'https://ev-database.org/img/auto/BYD_Dolphin/BYD_Dolphin-01@2x.jpg',range:'427',accel:'7.0',power:'130',type:'Hatchback',badge:'BEST VALUE',egpfull:'550,000 EGP',desc:'Affordable city EV with great range'},
-  {id:8,brand:'chery',name:'I-CAR',sub:'Chery · SUV',price:'1,375,000',img:'',range:'520',accel:'7.8',power:'185',type:'SUV',badge:'',egpfull:'1,375,000 EGP',desc:'Bold electric adventure SUV by Chery'},
+// ── BACKGROUND CANVAS PARTICLES ──
+(function(){
+  const c=document.getElementById('bgcvs');
+  if(!c)return;
+  const ctx=c.getContext('2d');
+  let W=window.innerWidth,H=window.innerHeight;
+  c.width=W;c.height=H;
+  const pts=Array.from({length:160},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.28,r:Math.random()*1.4+.4,o:Math.random()*.35+.08}));
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+      if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(0,229,160,${p.o})`;ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+  window.addEventListener('resize',()=>{W=window.innerWidth;H=window.innerHeight;c.width=W;c.height=H;});
+})();
+
+// ── CARS DATA ──
+const cars=[
+  {id:1,brand:'xiaomi',name:'SU7',sub:'Xiaomi · Sedan',price:'1,100,000',img:'',range:'730',acc:'2.78',pwr:'299',badge:'NEW',type:'Sedan'},
+  {id:2,brand:'xiaomi',name:'SU7 Ultra',sub:'Xiaomi · Performance',price:'1,900,000',img:'',range:'800',acc:'1.97',pwr:'673',badge:'ULTRA',type:'Performance'},
+  {id:3,brand:'xiaomi',name:'YU7',sub:'Xiaomi · SUV',price:'1,050,000',img:'',range:'760',acc:'3.23',pwr:'374',badge:'2025',type:'SUV'},
+  {id:4,brand:'byd',name:'Seal',sub:'BYD · Sedan',price:'890,000',img:'',range:'570',acc:'3.8',pwr:'390',badge:'',type:'Sedan'},
+  {id:5,brand:'byd',name:'Atto 3',sub:'BYD · Compact SUV',price:'680,000',img:'',range:'420',acc:'7.3',pwr:'150',badge:'POPULAR',type:'SUV'},
+  {id:6,brand:'byd',name:'Han EV',sub:'BYD · Executive',price:'1,050,000',img:'',range:'521',acc:'3.9',pwr:'380',badge:'',type:'Sedan'},
+  {id:7,brand:'byd',name:'Dolphin',sub:'BYD · Hatchback',price:'550,000',img:'',range:'427',acc:'7.0',pwr:'130',badge:'BEST VALUE',type:'Hatchback'},
+  {id:8,brand:'chery',name:'I-CAR',sub:'Chery · SUV',price:'1,375,000',img:'',range:'520',acc:'7.8',pwr:'185',badge:'',type:'SUV'},
 ];
 
 function carSVG(brand){
-  const c=brand==='byd'?'#1a6eff':brand==='chery'?'#ff3a3a':'#00e5a0';
-  return `<svg viewBox="0 0 300 140" xmlns="http://www.w3.org/2000/svg" style="width:90%;opacity:.55;filter:drop-shadow(0 0 10px ${c})">
-  <path d="M30,95 L30,78 Q35,62 50,56 L80,44 Q110,34 130,32 L168,32 Q195,34 220,46 L248,60 Q262,66 265,80 L265,95 Z" fill="#111" stroke="${c}" stroke-width="1.2"/>
-  <path d="M80,44 Q110,34 130,32 L168,32 Q195,34 215,42 L215,42 Q195,28 168,24 L130,24 Q108,26 90,40 Z" fill="#0d0d0d"/>
-  <circle cx="78" cy="102" r="19" fill="#0a0a0a" stroke="${c}" stroke-width="1.2"/>
-  <circle cx="78" cy="102" r="8" fill="none" stroke="${c}" stroke-width="4" opacity=".4"/>
-  <circle cx="218" cy="102" r="19" fill="#0a0a0a" stroke="${c}" stroke-width="1.2"/>
-  <circle cx="218" cy="102" r="8" fill="none" stroke="${c}" stroke-width="4" opacity=".4"/>
-  <line x1="50" y1="94" x2="195" y2="94" stroke="${c}" stroke-width="1" opacity=".5"/>
-  <line x1="32" y1="73" x2="50" y2="68" stroke="${c}" stroke-width="2" opacity=".9"/>
-  <line x1="258" y1="75" x2="265" y2="76" stroke="${c}" stroke-width="2" opacity=".9"/>
-  </svg>`;
+  const c=brand==='byd'?'#1a6eff':brand==='chery'?'#ff4040':'#00e5a0';
+  return `<svg viewBox="0 0 300 150" style="width:90%;filter:drop-shadow(0 0 8px ${c})">
+<path d="M20,105 L20,88 Q24,76 38,72 L68,62 Q90,50 108,46 L120,68 L176,68 L190,46 Q212,52 244,68 L262,82 L264,96 L264,105 Z" fill="#111" stroke="#1e1e1e" stroke-width="1"/>
+<path d="M108,46 Q124,26 142,20 L158,20 Q174,22 190,46 Z" fill="#0d0d0d" stroke="#1e1e1e" stroke-width="1"/>
+<path d="M108,46 Q124,26 142,20 L148,20 L128,46 Z" fill="rgba(0,55,100,.75)" stroke="${c}" stroke-width=".7" opacity=".9"/>
+<path d="M128,46 L148,20 L174,20 L190,46 Z" fill="rgba(0,60,105,.7)" stroke="${c}" stroke-width=".7" opacity=".85"/>
+<line x1="148" y1="20" x2="152" y2="46" stroke="#1e1e1e" stroke-width="1.5"/>
+<circle cx="68" cy="110" r="26" fill="#080808" stroke="#181818" stroke-width="2"/>
+<circle cx="68" cy="110" r="16" fill="none" stroke="#141414" stroke-width="5"/>
+<circle cx="68" cy="110" r="7" fill="#131313" stroke="${c}" stroke-width="1"/>
+<circle cx="218" cy="110" r="26" fill="#080808" stroke="#181818" stroke-width="2"/>
+<circle cx="218" cy="110" r="16" fill="none" stroke="#141414" stroke-width="5"/>
+<circle cx="218" cy="110" r="7" fill="#131313" stroke="${c}" stroke-width="1"/>
+<path d="M22,92 Q26,78 40,74 L56,70" fill="none" stroke="${c}" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="264" y1="78" x2="264" y2="100" stroke="${c}" stroke-width="3" stroke-linecap="round"/>
+<line x1="38" y1="102" x2="240" y2="102" stroke="${c}" stroke-width="1.2" opacity=".6"/>
+</svg>`;
 }
 
-function renderCars(filter='all'){
-  const grid=document.getElementById('carsGrid');
-  const filtered=filter==='all'?carsData:carsData.filter(c=>c.brand===filter);
-  grid.innerHTML=filtered.map(c=>`
-    <div class="car-card reveal" data-brand="${c.brand}">
-      <div class="car-img">
-        ${c.img?`<img src="${c.img}" alt="${c.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="car-placeholder" style="display:none">${carSVG(c.brand)}</div>`
-        :`<div class="car-placeholder">${carSVG(c.brand)}</div>`}
-        <div class="brand-badge">${c.brand.toUpperCase()}</div>
-        ${c.badge?`<div class="type-badge">${c.badge}</div>`:''}
-      </div>
-      <div class="car-body">
-        <div class="car-name">${c.name}</div>
-        <div class="car-brand-sub">${c.sub}</div>
-        <div class="car-price">${c.price}</div>
-        <div class="car-price-sub">EGP — Delivered in Egypt</div>
-        <div class="car-stats">
-          <div><div class="cs-val">${c.range}<span class="cs-unit">km</span></div><div class="cs-lbl">Range</div></div>
-          <div><div class="cs-val">${c.accel}<span class="cs-unit">s</span></div><div class="cs-lbl">0-100</div></div>
-          <div><div class="cs-val">${c.power}<span class="cs-unit">kW</span></div><div class="cs-lbl">Power</div></div>
-        </div>
-        <div class="car-cta">
-          <button class="btn-card btn-card-primary" onclick="selectOrderModel('${c.name}');document.getElementById('order').scrollIntoView({behavior:'smooth'})">Order Now</button>
-          <a href="https://wa.me/201000000000?text=I'm interested in the ${c.brand.toUpperCase()} ${c.name}" target="_blank" class="btn-card btn-card-outline">WhatsApp</a>
-        </div>
-      </div>
-    </div>`).join('');
-  document.querySelectorAll('.car-card.reveal').forEach(el=>obs.observe(el));
+function renderCars(f='all'){
+  const g=document.getElementById('cgrid');
+  const list=f==='all'?cars:cars.filter(c=>c.brand===f);
+  g.innerHTML=list.map(c=>`
+<div class="ccard rev" data-brand="${c.brand}">
+  <div class="cimg">
+    <div class="car-ph">${carSVG(c.brand)}</div>
+    <div class="bb">${c.brand.toUpperCase()}</div>
+    ${c.badge?`<div class="tb">${c.badge}</div>`:''}
+  </div>
+  <div class="cbody">
+    <div class="cname">${c.name}</div>
+    <div class="csub">${c.sub}</div>
+    <div class="cprice">${c.price}</div>
+    <div class="cpsub">EGP — Delivered in Egypt</div>
+    <div class="cstats">
+      <div><div class="csv">${c.range}<span class="csu">km</span></div><div class="csl">Range</div></div>
+      <div><div class="csv">${c.acc}<span class="csu">s</span></div><div class="csl">0-100</div></div>
+      <div><div class="csv">${c.pwr}<span class="csu">kW</span></div><div class="csl">Power</div></div>
+    </div>
+    <div class="ccta">
+      <button class="bc bc-p" onclick="selOrd('${c.name}');document.getElementById('order').scrollIntoView({behavior:'smooth'})">Order</button>
+      <a href="https://wa.me/201000000000?text=Interested in ${c.brand.toUpperCase()} ${c.name}" target="_blank" class="bc bc-o">WhatsApp</a>
+    </div>
+  </div>
+</div>`).join('');
+  document.querySelectorAll('.ccard.rev').forEach(el=>obs.observe(el));
 }
 
-function filterCars(brand,btn){
-  document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.brand-item').forEach(b=>b.classList.remove('active'));
-  if(btn){btn.classList.add('active');}
-  else{
-    const bItem=document.querySelectorAll('.brand-item');
-    bItem.forEach(b=>{if(b.textContent.toLowerCase().includes(brand)||brand==='all'){}});
-    const matching=[...document.querySelectorAll('.brand-item')].find(b=>b.querySelector('.brand-name')?.textContent.toLowerCase()===brand);
-    if(matching)matching.classList.add('active');
-  }
-  renderCars(brand==='all'?'all':brand);
+function filterCars(f,btn){
+  document.querySelectorAll('.ft,.brand-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  const bb=[...document.querySelectorAll('.brand-btn')].find(b=>b.querySelector('.bn')?.textContent.toLowerCase()===f);
+  if(bb)bb.classList.add('active');
+  const fb=[...document.querySelectorAll('.ft')].find(b=>b.textContent.toLowerCase()===f||b.textContent.toLowerCase()==='all'&&f==='all');
+  if(fb)fb.classList.add('active');
+  renderCars(f);
   document.getElementById('cars').scrollIntoView({behavior:'smooth'});
 }
 
-// Order configurator
-const oCfg={model:'SU7',base:1100000,trim:{n:'Pro',p:250000},color:{n:'Midnight Black',p:0},battery:{n:'730 km',p:170000},wheels:{n:'19" Standard',p:0}};
-function oModel(m,btn){
-  oCfg.model=m;oCfg.base=m==='SU7'?1100000:1050000;
-  document.querySelectorAll('.o-tbtn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');oSum();
-  if(window._updateCarModel)window._updateCarModel(m);
+// ── SPOTLIGHT ──
+const mods={'SU7':{s:'2.78',r:'800',p:'673',c:'1,100,000',d:'The SU7 redefines performance sedans. 0–100 km/h in 2.78 s, up to 800 km range, and full Xiaomi ecosystem integration.'},
+  'SU7 Ultra':{s:'1.97',r:'800',p:'673',c:'1,900,000',d:'The SU7 Ultra is in another league. Carbon fibre elements, tri-motor architecture and a 1.97 s century sprint. No compromises.'},
+  'YU7':{s:'3.23',r:'760',p:'374',c:'1,050,000',d:'The YU7 SUV brings Xiaomi performance to a larger format. Intelligent AWD, spacious cabin, and the same software-first obsession.'}};
+function switchMod(m,btn){
+  document.querySelectorAll('.mtab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  const d=mods[m];
+  document.getElementById('ms').innerHTML=d.s+'<span class="su2">s</span>';
+  document.getElementById('mr').innerHTML=d.r+'<span class="su2">km</span>';
+  document.getElementById('mp').innerHTML=d.p+'<span class="su2">hp</span>';
+  document.getElementById('mc').innerHTML=d.c+'<span class="su2" style="font-size:.5rem"> EGP</span>';
+  document.getElementById('mod-desc').textContent=d.d;
 }
-function oOpt(type,name,btn,price){
-  oCfg[type]={n:name,p:price};
-  btn.closest('.o-grid3').querySelectorAll('.o-opt').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');oSum();
-}
-function oColor(name,hex,btn,price){
-  oCfg.color={n:name,p:price};
-  document.getElementById('ocname').textContent=name;
-  document.querySelectorAll('.o-cbtn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');oSum();
-  if(window._updateCarColor)window._updateCarColor(hex);
-}
+
+// ── ORDER ──
+const oc={model:'SU7',base:1100000,trim:{n:'Pro',p:250000},col:{n:'Midnight Black',p:0},batt:{n:'730 km',p:170000},whl:{n:'19" Aero',p:0}};
+function oMod(m,btn){oc.model=m;oc.base=m==='SU7'?1100000:1050000;document.querySelectorAll('.otbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');oSum();}
+function oOpt(t,n,btn,p){oc[t]={n,p};btn.closest('.og3').querySelectorAll('.oopt').forEach(b=>b.classList.remove('active'));btn.classList.add('active');oSum();}
+function oCol(n,h,btn,p){oc.col={n,p};document.getElementById('ocn').textContent=n;document.querySelectorAll('.ocb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');oSum();}
 function oSum(){
-  const tot=oCfg.base+oCfg.trim.p+oCfg.color.p+oCfg.battery.p+oCfg.wheels.p;
-  document.getElementById('sum-model').textContent='Xiaomi '+oCfg.model;
-  document.getElementById('sum-sub').textContent=oCfg.trim.n+' · '+oCfg.color.n;
-  const rows=[[oCfg.model+' Base',oCfg.base],[oCfg.trim.n+' Trim',oCfg.trim.p],[oCfg.color.n,oCfg.color.p],[oCfg.battery.n+' Battery',oCfg.battery.p],[oCfg.wheels.n+' Wheels',oCfg.wheels.p]].filter(r=>r[1]>0);
-  document.getElementById('sum-items').innerHTML=rows.map(([n,p])=>`<div class="sum-item"><span>${n}</span><span class="val">${p.toLocaleString()} EGP</span></div>`).join('');
-  document.getElementById('sum-price').textContent=tot.toLocaleString()+' EGP';
+  const tot=oc.base+oc.trim.p+oc.col.p+oc.batt.p+oc.whl.p;
+  document.getElementById('smod').textContent='Xiaomi '+oc.model;
+  document.getElementById('ssub').textContent=oc.trim.n+' · '+oc.col.n;
+  const rows=[[oc.model+' Base',oc.base],[oc.trim.n+' Trim',oc.trim.p],[oc.col.n,oc.col.p],[oc.batt.n+' Battery',oc.batt.p],[oc.whl.n+' Wheels',oc.whl.p]].filter(r=>r[1]>0);
+  document.getElementById('sitems').innerHTML=rows.map(([n,p])=>`<div class="si"><span>${n}</span><span class="v">${p.toLocaleString()} EGP</span></div>`).join('');
+  document.getElementById('sprice').textContent=tot.toLocaleString()+' EGP';
 }
-function selectOrderModel(m){
-  const btn=document.getElementById('ob-'+m.replace(' ','').replace('Ultra','SU7'));
-  if(btn){oCfg.model=m==='YU7'?'YU7':'SU7';oCfg.base=oCfg.model==='YU7'?1050000:1100000;document.querySelectorAll('.o-tbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');oSum();}
-}
-function submitOrder(){
-  const p=document.getElementById('sum-price').textContent;
-  alert('Order Request Received!\n\nVehicle: Xiaomi '+oCfg.model+'\nTotal: '+p+'\n\nOur team will contact you within 24 hours to confirm your 50,000 EGP deposit.\n\nThank you for choosing Electra Egypt!');
-}
-oSum();
-
-// Xiaomi spotlight model switch
-const modelData={
-  'SU7':{speed:'2.78',range:'800',power:'673',price:'1,100,000',desc:'The SU7 redefines what a performance sedan can be. With a 0–100 km/h time of just 2.78 seconds and a range of up to 800 km, it combines engineering excellence with the Xiaomi tech ecosystem.'},
-  'YU7':{speed:'3.23',range:'760',power:'374',price:'1,050,000',desc:'The YU7 SUV brings the Xiaomi performance philosophy to a larger format. Intelligent AWD, spacious interior, and the same obsessive attention to software-hardware integration.'},
-  'SU7 Ultra':{speed:'1.97',range:'800',power:'673',price:'1,900,000',desc:'The SU7 Ultra is in another league entirely. Carbon fibre chassis elements, tri-motor architecture and track-tuned suspension deliver a 1.97-second century sprint. For those who accept no compromise.'}
-};
-function switchModel(m,btn){
-  document.querySelectorAll('.model-tab').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  const d=modelData[m];
-  document.getElementById('m-speed').innerHTML=d.speed+'<span class="stat-unit">s</span>';
-  document.getElementById('m-range').innerHTML=d.range+'<span class="stat-unit">km</span>';
-  document.getElementById('m-power').innerHTML=d.power+'<span class="stat-unit">hp</span>';
-  document.getElementById('m-price').innerHTML=d.price+'<span class="stat-unit" style="font-size:.6rem"> EGP</span>';
-  document.getElementById('model-desc').innerHTML=`<p class="s-body">${d.desc}</p>`;
-}
-
-function submitForm(e){
-  e.preventDefault();
-  const btn=e.target.querySelector('button[type="submit"]');
-  btn.textContent='Message Sent ✓';btn.style.background='transparent';btn.style.color='var(--g)';btn.style.border='1px solid var(--g)';
-  setTimeout(()=>{btn.textContent='Send Message →';btn.style.cssText='';},3500);
-}
-
-// init
-renderCars('all');
-
-// Assembly hint
-setTimeout(()=>{const h=document.getElementById('asmLabel');if(h){h.style.opacity='1';setTimeout(()=>h.style.opacity='0',4500);}},2000);
+function selOrd(m){const b=document.getElementById('ob-'+(m==='YU7'?'YU7':'SU7'));if(b){oMod(m==='YU7'?'YU7':'SU7',b);}}
+function subOrd(){alert('Order Reserved!\n\nVehicle: Xiaomi '+oc.model+'\nTotal: '+document.getElementById('sprice').textContent+'\n\nOur team will call within 24 hours.\nThank you for choosing Electra Egypt!');}
+function subForm(e){e.preventDefault();const b=e.target.querySelector('button[type="submit"]'),o=b.textContent;b.textContent='Sent ✓';b.style.cssText='background:transparent;color:var(--g);border:1px solid var(--g)';setTimeout(()=>{b.textContent=o;b.style.cssText='';},3500);}
+oSum();renderCars('all');
 </script>
 
-<!-- THREE.JS 3D ASSEMBLY -->
-<script type="module">
-import * as THREE from 'three';
+<!-- ═══════════════════════════════════════════════
+     GSAP CAR ASSEMBLY — scroll-pinned animation
+     Each car part has its own unique motion:
+     wheels ROLL in spinning, roof DROPS, hood SLIDES
+     from front, trunk from rear, glass DESCENDS
+═══════════════════════════════════════════════ -->
+<script>
+gsap.registerPlugin(ScrollTrigger);
 
-const W=window.innerWidth,H=window.innerHeight;
-const canvas=document.getElementById('cvs');
-const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
-renderer.setSize(W,H);renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.25;
-renderer.shadowMap.enabled=true;
+// Build the master assembly timeline
+const tl = gsap.timeline();
 
-const scene=new THREE.Scene();
-scene.fog=new THREE.FogExp2(0x070707,.018);
-const camera=new THREE.PerspectiveCamera(44,W/H,.1,200);
-camera.position.set(0,3.5,15);camera.lookAt(0,.2,0);
+// ── WHEELS ROLL IN (spinning rotation + translate) ──
+tl.from('.cp-wheel-f', {
+  x: -700, rotation: -900,
+  opacity: 0, duration: 1.4, ease: 'power2.out',
+  transformOrigin: '195px 232px'
+}, 0);
+tl.from('.cp-wheel-r', {
+  x: 700, rotation: 900,
+  opacity: 0, duration: 1.4, ease: 'power2.out',
+  transformOrigin: '705px 232px'
+}, 0.06);
 
-// LIGHTS
-scene.add(new THREE.AmbientLight(0xffffff,.2));
-const gL=new THREE.PointLight(0x00e5a0,14,40);gL.position.set(-6,7,6);scene.add(gL);
-const bL=new THREE.PointLight(0x002244,5,30);bL.position.set(9,-2,-6);scene.add(bL);
-const top=new THREE.DirectionalLight(0xffffff,2);top.position.set(2,12,6);top.castShadow=true;scene.add(top);
-const fL=new THREE.PointLight(0x00e5a0,5,12);fL.position.set(0,-1,0);scene.add(fL);
-const rL=new THREE.PointLight(0x00aaff,3,22);rL.position.set(8,2,-8);scene.add(rL);
+// ── CHASSIS RISES FROM BELOW ──
+tl.from('.cp-chassis', {
+  y: 400, opacity: 0, duration: 1.1, ease: 'power3.out'
+}, 0.14);
 
-// MATERIALS
-const bMat=new THREE.MeshStandardMaterial({color:0x0d0d0d,metalness:.95,roughness:.05});
-const gMat=new THREE.MeshStandardMaterial({color:0x00e5a0,emissive:0x00e5a0,emissiveIntensity:1.4,metalness:.4,roughness:.2});
-const glMat=new THREE.MeshStandardMaterial({color:0x0a2233,metalness:.1,roughness:0,transparent:true,opacity:.35});
-const wMat=new THREE.MeshStandardMaterial({color:0x111111,metalness:.85,roughness:.25});
-const rMat=new THREE.MeshStandardMaterial({color:0xdddddd,metalness:1,roughness:.06});
+// ── HOOD SWOOPS IN FROM FRONT-LEFT ──
+tl.from('.cp-hood', {
+  x: -500, y: -80, rotation: -22,
+  opacity: 0, duration: 1.2, ease: 'power3.out',
+  transformOrigin: '165px 210px'
+}, 0.22);
 
-const car=new THREE.Group();scene.add(car);
+// ── TRUNK SWEEPS IN FROM REAR-RIGHT ──
+tl.from('.cp-trunk', {
+  x: 500, y: -80, rotation: 22,
+  opacity: 0, duration: 1.2, ease: 'power3.out',
+  transformOrigin: '735px 195px'
+}, 0.26);
 
-// Groups with staggered delays
-const groups=[{p:[],d:0},{p:[],d:.1},{p:[],d:.2},{p:[],d:.32},{p:[],d:.44},{p:[],d:.56},{p:[],d:.68}];
+// ── CABIN DROPS FROM ABOVE ──
+tl.from('.cp-cabin', {
+  y: -500, rotation: -4,
+  opacity: 0, duration: 1.2, ease: 'power3.out',
+  transformOrigin: '450px 135px'
+}, 0.34);
 
-function addPart(geo,mat,tPos,tRot=[0,0,0],g=0){
-  const mesh=new THREE.Mesh(geo,mat);
-  mesh.castShadow=true;
-  const sp=new THREE.Vector3((Math.random()-.5)*65,(Math.random()-.5)*32,(Math.random()-.5)*65);
-  const sr=[Math.random()*Math.PI*2,Math.random()*Math.PI*2,Math.random()*Math.PI*2];
-  mesh.position.copy(sp);mesh.rotation.set(...sr);
-  car.add(mesh);
-  groups[g].p.push({mesh,sp:sp.clone(),sr,tp:new THREE.Vector3(...tPos),tr:tRot});
-  return mesh;
-}
+// ── WINDSHIELD GLIDES IN FROM FRONT ──
+tl.from('.cp-windshield', {
+  x: -280, y: -180, rotation: 18,
+  opacity: 0, duration: 1, ease: 'power3.out',
+  transformOrigin: '310px 148px'
+}, 0.44);
 
-// GROUP 0 — Chassis (first)
-addPart(new THREE.BoxGeometry(4.9,.44,2),bMat,[0,-.15,0],[0,0,0],0);
+// ── SIDE WINDOWS DESCEND ──
+tl.from('.cp-windows', {
+  y: -280, opacity: 0, duration: 1, ease: 'power3.out'
+}, 0.50);
 
-// GROUP 1 — Body panels
-addPart(new THREE.BoxGeometry(2.1,.74,1.9),bMat,[.08,.46,0],[0,0,0],1);
-addPart(new THREE.BoxGeometry(1.5,.12,2),bMat,[-1.78,.09,0],[0,0,0],1);
-addPart(new THREE.BoxGeometry(1,.14,2),bMat,[1.9,.09,0],[0,0,0],1);
+// ── REAR GLASS SLIDES FROM BACK ──
+tl.from('.cp-rearglass', {
+  x: 220, y: -160, rotation: -14,
+  opacity: 0, duration: 0.95, ease: 'power3.out',
+  transformOrigin: '618px 158px'
+}, 0.52);
 
-// GROUP 2 — Bumpers
-addPart(new THREE.BoxGeometry(.17,.42,2),bMat,[-2.45,-.22,0],[0,0,0],2);
-addPart(new THREE.BoxGeometry(.17,.42,2),bMat,[2.45,-.22,0],[0,0,0],2);
-// Spoiler
-addPart(new THREE.BoxGeometry(.6,.1,1.6),bMat,[1.12,.9,0],[0,0,0],2);
+// ── BUMPERS SHOOT FROM ENDS ──
+tl.from('.cp-bumper-f', {
+  x: -300, opacity: 0, duration: 0.8, ease: 'power3.out'
+}, 0.58);
+tl.from('.cp-bumper-r', {
+  x: 300, opacity: 0, duration: 0.8, ease: 'power3.out'
+}, 0.60);
 
-// GROUP 3 — Glass
-addPart(new THREE.BoxGeometry(.06,.7,1.85),glMat,[-.82,.43,0],[0,0,.27],3);
-addPart(new THREE.BoxGeometry(.06,.6,1.82),glMat,[1.07,.43,0],[0,0,-.23],3);
-addPart(new THREE.BoxGeometry(1.6,.45,.04),glMat,[.06,.52,-.96],[0,0,0],3);
-addPart(new THREE.BoxGeometry(1.6,.45,.04),glMat,[.06,.52,.96],[0,0,0],3);
+// ── MIRROR POPS IN ──
+tl.from('.cp-mirror', {
+  x: -160, scale: 0,
+  opacity: 0, duration: 0.6, ease: 'back.out(2.5)',
+  transformOrigin: '247px 190px'
+}, 0.66);
 
-// GROUP 4 — GREEN Accents
-addPart(new THREE.BoxGeometry(3.9,.11,.04),gMat,[0,-.38,-.99],[0,0,0],4);
-addPart(new THREE.BoxGeometry(3.9,.11,.04),gMat,[0,-.38,.99],[0,0,0],4);
-addPart(new THREE.BoxGeometry(.07,.11,.54),gMat,[-2.4,-.04,-.65],[0,0,0],4);
-addPart(new THREE.BoxGeometry(.07,.11,.54),gMat,[-2.4,-.04,.65],[0,0,0],4);
-addPart(new THREE.BoxGeometry(.07,.07,1.65),gMat,[2.4,-.13,0],[0,0,0],4);
-addPart(new THREE.BoxGeometry(.08,.06,1.6),gMat,[-2.46,-.4,0],[0,0,0],4);
+// ── SPOILER DROPS ──
+tl.from('.cp-spoiler', {
+  y: -250, opacity: 0, duration: 0.65, ease: 'bounce.out'
+}, 0.68);
 
-// GROUP 5 — Wheels
-[[-.155,-.52,-1.1],[-.155,-.52,1.1],[1.5,-.52,-1.1],[1.5,-.52,1.1]].forEach((p,i)=>{
-  addPart(new THREE.TorusGeometry(.43,.145,7,18),wMat,p,[Math.PI/2,0,0],5);
-  addPart(new THREE.CylinderGeometry(.27,.27,.07,8),rMat,p,[0,0,0],5);
+// ── DOOR LINE ──
+tl.from('.cp-doorline', {
+  opacity: 0, scaleY: 0, duration: 0.4,
+  transformOrigin: '436px 108px'
+}, 0.72);
+
+// ── BADGE ──
+tl.from('.cp-badge', { opacity: 0, duration: 0.5 }, 0.74);
+
+// ── HEADLIGHTS SPARK ON ──
+tl.from('.cp-headlight', {
+  opacity: 0, x: -80, duration: 0.5, ease: 'power4.out'
+}, 0.78);
+
+// ── TAILLIGHTS SPARK ON ──
+tl.from('.cp-taillight', {
+  opacity: 0, x: 80, duration: 0.5, ease: 'power4.out'
+}, 0.81);
+
+// ── SILL ACCENT EXTENDS FROM CENTER ──
+tl.from('.cp-sill', {
+  scaleX: 0, opacity: 0, duration: 0.7, ease: 'power3.out',
+  transformOrigin: '458px 260px'
+}, 0.84);
+
+// ── ASSEMBLED GLOW ──
+tl.to('#herocar', {
+  filter: 'drop-shadow(0 0 45px rgba(0,229,160,0.55))',
+  duration: 0.5, ease: 'power2.out'
+}, 0.92);
+
+// PIN HERO, DRIVE TIMELINE BY SCROLL
+ScrollTrigger.create({
+  animation: tl,
+  trigger: '#hero',
+  start: 'top top',
+  end: '+=200%',
+  scrub: 1.6,
+  pin: true,
+  anticipatePin: 1,
+  onUpdate(self) {
+    const p = self.progress;
+    // Update assembly progress bar
+    const bar = document.getElementById('asm-bar');
+    const barWrap = document.getElementById('asm-bar-wrap');
+    if (bar) bar.style.width = (p * 100) + '%';
+    if (p > 0.02 && p < 0.98) {
+      if (barWrap) barWrap.style.display = 'block';
+      document.getElementById('asmHint').style.display = 'none';
+      document.getElementById('asmDone').style.display = 'none';
+    }
+    if (p >= 0.98) {
+      if (barWrap) barWrap.style.display = 'none';
+      document.getElementById('asmDone').style.display = 'inline';
+      document.getElementById('asmHint').style.display = 'none';
+      document.getElementById('herocar').classList.add('car-assembled');
+    } else if (p < 0.02) {
+      document.getElementById('asmHint').style.display = 'inline';
+      document.getElementById('asmDone').style.display = 'none';
+      if (barWrap) barWrap.style.display = 'none';
+      document.getElementById('herocar').classList.remove('car-assembled');
+    }
+  }
 });
 
-// GROUP 6 — Details (mirrors, under-glow)
-addPart(new THREE.BoxGeometry(.08,.1,.2),bMat,[-.6,.42,-1.0],[0,0,0],6);
-addPart(new THREE.BoxGeometry(.08,.1,.2),bMat,[-.6,.42,1.0],[0,0,0],6);
-addPart(new THREE.BoxGeometry(3.7,.03,.03),gMat,[0,-.41,-.97],[0,0,0],6);
-addPart(new THREE.BoxGeometry(3.7,.03,.03),gMat,[0,-.41,.97],[0,0,0],6);
-
-// GRID FLOOR
-const grid=new THREE.GridHelper(60,60,0x00e5a0,0x0d1a12);
-grid.position.y=-.97;grid.material.transparent=true;grid.material.opacity=.15;scene.add(grid);
-
-// GROUND GLOW
-const gg=new THREE.Mesh(new THREE.PlaneGeometry(8,4),new THREE.MeshBasicMaterial({color:0x00e5a0,transparent:true,opacity:.04,blending:THREE.AdditiveBlending,depthWrite:false}));
-gg.rotation.x=-Math.PI/2;gg.position.y=-.96;scene.add(gg);
-
-// PARTICLES
-const pN=5000,pPos=new Float32Array(pN*3);
-for(let i=0;i<pN;i++){
-  const t=Math.random()*Math.PI*2,p=Math.acos(2*Math.random()-1),r=12+Math.random()*40;
-  pPos[i*3]=r*Math.sin(p)*Math.cos(t);pPos[i*3+1]=r*Math.sin(p)*Math.sin(t);pPos[i*3+2]=r*Math.cos(p);
-}
-const pGeo=new THREE.BufferGeometry();pGeo.setAttribute('position',new THREE.BufferAttribute(pPos,3));
-const pts=new THREE.Points(pGeo,new THREE.PointsMaterial({color:0x00e5a0,size:.04,transparent:true,opacity:.45,blending:THREE.AdditiveBlending,sizeAttenuation:true}));
-scene.add(pts);
-
-// EASING
-function eOut(t){return 1-Math.pow(1-t,3);}
-function lerp(a,b,t){return a+(b-a)*t;}
-
-// ASSEMBLY
-let asmProg=0;
-function updateAsm(t){
-  groups.forEach(g=>{
-    const local=eOut(Math.max(0,Math.min(1,(t-g.d)/(1-g.d))));
-    g.p.forEach(p=>{
-      p.mesh.position.lerpVectors(p.sp,p.tp,local);
-      p.mesh.rotation.x=lerp(p.sr[0],p.tr[0]||0,local);
-      p.mesh.rotation.y=lerp(p.sr[1],p.tr[1]||0,local);
-      p.mesh.rotation.z=lerp(p.sr[2],p.tr[2]||0,local);
-    });
-  });
-}
-
-// SCROLL
-let tcx=0,tcy=3.5,tcz=15,mx=0,my=0,powered=false,powerT=0;
-window.addEventListener('scroll',()=>{
-  const heroH=window.innerHeight;
-  asmProg=Math.min(window.scrollY/(heroH*.9),1);
-  updateAsm(asmProg);
-  if(asmProg>.98&&!powered){powered=true;powerT=Date.now();gL.intensity=40;fL.intensity=20;}
-  const sf=window.scrollY/(document.body.scrollHeight-window.innerHeight);
-  tcy=3.5+Math.sin(sf*Math.PI)*1.5;tcz=15-sf*4;
-});
-document.addEventListener('mousemove',e=>{mx=(e.clientX/window.innerWidth-.5)*2;my=(e.clientY/window.innerHeight-.5)*2;});
-
-// GLOBALS
-window._updateCarColor=hex=>{bMat.color.setStyle(hex);};
-window._updateCarModel=m=>{
-  const isu7=m==='SU7';const t=Date.now();
-  (function sa(){const p=Math.min((Date.now()-t)/700,1),e=eOut(p);
-    car.scale.set(lerp(car.scale.x,isu7?1:1.06,e),lerp(car.scale.y,isu7?1:1.16,e),lerp(car.scale.z,isu7?1:1.06,e));
-    if(p<1)requestAnimationFrame(sa);})();
-};
-
-// LOOP
-let time=0;
-function animate(){
-  requestAnimationFrame(animate);time+=.012;
-  if(asmProg>.95)car.rotation.y+=.0022;
-  tcx=mx*2.8;
-  camera.position.x+=(tcx-camera.position.x)*.04;
-  camera.position.y+=(tcy-my*1.4-camera.position.y)*.04;
-  camera.position.z+=(tcz-camera.position.z)*.04;
-  camera.lookAt(0,.2,0);
-  // Power-on flash decay
-  if(powered&&gL.intensity>14){gL.intensity=Math.max(14,gL.intensity*.92);fL.intensity=Math.max(5,fL.intensity*.9);}
-  // Pulse
-  gL.intensity=(!powered?12:gL.intensity)+Math.sin(time*1.8)*2;
-  fL.intensity=(!powered?4:fL.intensity)+Math.sin(time*2.8)*1.2;
-  pts.rotation.y+=.0004;
-  grid.material.opacity=.08+asmProg*.22;
-  gg.material.opacity=.02+asmProg*.06;
-  renderer.render(scene,camera);
-}
-animate();
-
-window.addEventListener('resize',()=>{
-  const nw=window.innerWidth,nh=window.innerHeight;
-  camera.aspect=nw/nh;camera.updateProjectionMatrix();renderer.setSize(nw,nh);
-});
+// Show bar wrap after init
+document.getElementById('asm-bar-wrap').style.display = 'none';
 </script>
 
 </body>
